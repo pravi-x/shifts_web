@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Table Generator</title>
+
+    <link rel="stylesheet" href="style.css">
+        
+    </style>
+</head>
+<body>
+    <h1>Table Generator</h1>
+    
+    <label for="rows">number of people:</label>
+    <input type="text" id="rows" name="rows" required pattern="[1-9][0-9]*" title="Please enter a positive number" value="5">
+
+    <label for="columns">Number of Days(1-365):</label>
+    <input type="text" id="columns" name="columns" required pattern="^(0?[1-9]|[1-9][0-9]|[1-2][0-9]{2}|3[0-5][0-9]|36[0-5])$" title="Please enter a number between 1 and 365" value="30">
+    
+    <div class="button-container">
+        <button onclick="generateTable()">Generate New Table</button>
+        <button onclick="autofillTable()">Autofill Table</button>
+        <button onclick="exportToExcel()">Export to Excel</button>
+    </div>
+    
+    
+    <div id="tableContainer"></div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
