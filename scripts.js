@@ -11,23 +11,27 @@ function generateTable() {
         for (var i = 0; i < rows + 1; i++) {
             table += "<tr>";
 
-            for (var j = 0; j < columns + 3; j++) {
+            for (var j = 0; j < columns + 4; j++) {
                 if (i === 0) {
                     if (j === 0) {
                         table += "<td>Name</td>";
                     } else if (j === 1) {
-                        table += "<td>Total</td>";
+                        table += "<td>Max</td>";
                     } else if (j === 2) {
+                        table += "<td>Total</td>";
+                    } else if (j === 3) {
                         table += "<td>Total Holidays</td>";
                     } else {
-                        table += "<td onclick=\"markHoliday(this)\">" + (j - 2) + "</td>";
+                        table += "<td onclick=\"markHoliday(this)\">" + (j - 3) + "</td>";
                     }
                 } else {
                     if (j === 0) {
                         table += "<td><input type=\"text\"></td>";
                     } else if (j === 1) {
-                        table += "<td id=\"calculateRowTotals()\"></td>";
+                        table += "<td><input type=\"number\" value=\"3\" min=\"0\"></td>";
                     } else if (j === 2) {
+                        table += "<td id=\"calculateRowTotals()\"></td>";
+                    } else if (j === 3) {
                         table += "<td onclick=\"calculateRowTotals()\"></td>";
                     } else {
                         table += "<td onclick=\"markUnavaliabilityOrShift(this)\"></td>";
@@ -43,17 +47,13 @@ function generateTable() {
         table += "<td>Total</td>";
         table += "<td></td>";
         table += "<td></td>";
+        table += "<td></td>";
 
         for (var j = 0; j < columns; j++) {
             table += "<td></td>";
         }
 
         table += "</tr>";
-
-
-        
-
-        
 
         table += "</table>";
 
@@ -67,11 +67,12 @@ var markedDays = []; // Initialize an empty array to store marked days
 function markHoliday(cell) {
     if (cell.style.backgroundColor === "gray") {
         cell.style.backgroundColor = "";
-        removeMarkedDay(cell.innerHTML); // Remove the marked day from the list
+        removeMarkedDay(parseInt(cell.innerHTML)); // Remove the marked day from the list
     } else {
         cell.style.backgroundColor = "gray";
         addMarkedDay(parseInt(cell.innerHTML)); // Add the marked day as a number to the list
     }
+    calculateRowTotals()
 }
 
 function addMarkedDay(day) {
@@ -98,6 +99,7 @@ function markUnavaliabilityOrShift(cell) {
         cell.style.backgroundColor = "red";
         cell.innerHTML = "-";
     }
+    calculateRowTotals()
 }
 
 function calculateRowTotals() {
@@ -109,28 +111,61 @@ function calculateRowTotals() {
         var count = 0;
         var holidaysCount = 0;
 
-        for (var j = 3; j < cells.length; j++) {
+        for (var j = 4; j < cells.length; j++) {
             if (cells[j].innerHTML === "1") {
                 count++;
-                if (markedDays.includes(j - 2)) {
+                if (markedDays.includes(j - 3)) {
                     holidaysCount++;
                 }
             }
         }
 
-        cells[1].innerHTML = count || 0;
-        cells[2].innerHTML = holidaysCount || 0;
+        cells[2].innerHTML = count || 0;
+        cells[3].innerHTML = holidaysCount || 0;
     }
+    holidaysCount = 0;
+    calculateCollumnsTotals()
+    calculateDaysTotals()
 }
 
+function calculateCollumnsTotals() {
+    var table = document.getElementsByTagName("table")[0];
+    var rows = table.getElementsByTagName("tr");
+    var column2Total = 0;
+    var column3Total = 0;
 
+    for (var i = 1; i < rows.length - 1; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        column2Total += parseInt(cells[2].innerHTML) || 0;
+        column3Total += parseInt(cells[3].innerHTML) || 0;
+    }
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Add event listener to the table for any click event
-    document.querySelector('table').addEventListener('click', function() {
-    calculateRowTotals(); // Update row totals on every click within the table
-    });
-});
+    rows[rows.length - 1].getElementsByTagName("td")[2].innerHTML = column2Total;
+    rows[rows.length - 1].getElementsByTagName("td")[3].innerHTML = column3Total;
+}
+
+function calculateDaysTotals() {
+    var table = document.getElementsByTagName("table")[0];
+    var rows = table.getElementsByTagName("tr");
+    var daysTotals = [];
+
+    for (var j = 4; j < rows[0].cells.length; j++) {
+        var count = 0;
+
+        for (var i = 1; i < rows.length - 1; i++) {
+            var cells = rows[i].getElementsByTagName("td");
+
+            if (cells[j].innerHTML === "1") {
+                count++;
+            }
+        }
+
+        daysTotals.push(count);
+        rows[rows.length - 1].cells[j].innerHTML = count; // Set the total in the last row of each column
+    }
+
+}
+
 
 function exportToExcel() {
     // Select the table element
