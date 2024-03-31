@@ -212,29 +212,31 @@ function autofillTable() {
 
     // Iterate over each day in random order
     for (var k = 0; k < days.length; k++) {
-        var j = days[k];
+        var day = days[k];
 
-        // Check if this day has been assigned already and if the previous and next days are not assigned
-        if (!assignedDays[j - 4] && (!assignedDays[j - 5] || !assignedDays[j - 3])) {
-            // Iterate over each row, skipping the first and last rows
-            for (var i = 1; i < rows.length - 1; i++) {
-                var cells = rows[i].getElementsByTagName("td");
+        // Iterate over each row
+        for (var i = 1; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName("td");
 
-                // Skip if the cell already has "-"
-                if (cells[j].innerHTML !== "-") {
-                    // Check if the current row can accept more assignments and there are no consecutive assigned days
-                    if (assignmentsPerRow[i - 1] < parseInt(cells[1].getElementsByTagName("input")[0].value) && !assignedDays[j - 5] && !assignedDays[j - 3]) {
-                        // Mark the cell as assigned
-                        markShift(cells[j]);
-                        // Increment the assignments count for this row
-                        assignmentsPerRow[i - 1]++;
-                        // Mark this day as assigned
-                        assignedDays[j - 4] = true;
-                        // Break the loop to move to the next day
-                        break;
-                    }
-                }
+            // Check if the day is marked as a holiday
+            if (markedDays.includes(day - 3)) {
+                continue;
             }
+
+            // Check if the row is already full
+            if (assignmentsPerRow[i - 1] >= parseInt(cells[1].getElementsByTagName("input")[0].value)) {
+                continue;
+            }
+
+            // Check if the day is already assigned
+            if (assignedDays[day - 4]) {
+                continue;
+            }
+
+            // Assign the day
+            markShift(cells[day]);
+            assignedDays[day - 4] = true;
+            assignmentsPerRow[i - 1]++;
         }
     }
 
