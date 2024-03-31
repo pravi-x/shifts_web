@@ -185,47 +185,51 @@ function exportToExcel() {
     // Select the table element
     var table = document.querySelector('table');
 
-    // Convert table data to a worksheet
-    var ws = XLSX.utils.table_to_sheet(table);
-
-    // Get the input values and background colors of columns 0 and 1
-    var rows = table.getElementsByTagName("tr");
-    for (var i = 1; i < rows.length - 1; i++) {
-        var cells = rows[i].getElementsByTagName("td");
-        var input0 = cells[0].getElementsByTagName("input")[0].value;
-        var input1 = cells[1].getElementsByTagName("input")[0].value;
-        var color0 = cells[0].style.backgroundColor;
-        var color1 = cells[1].style.backgroundColor;
-
-        // Set values in the worksheet
-        ws[getXLSXColumnName(0) + (i + 1)] = { v: input0, s: { fill: { fgColor: { rgb: color0 } } } };
-        ws[getXLSXColumnName(1) + (i + 1)] = { v: input1, s: { fill: { fgColor: { rgb: color1 } } } };
-    }
-
-    // Create a new workbook and add the worksheet
+    // Get all rows of the table
+    var rows = table.querySelectorAll('tr');
+    
+    // Create a workbook
     var wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-
+    wb.SheetNames.push("Sheet1");
+    
+    // Create a worksheet
+    var ws_data = [];
+    
+    // Loop through each row
+    rows.forEach(function(row, rowIndex) {
+        var rowData = [];
+        
+        // Get all cells in the row
+        var cells = row.querySelectorAll('td');
+        
+        // Loop through each cell
+        cells.forEach(function(cell, cellIndex) {
+            var input = cell.querySelector('input');
+            
+            // Get the value and background color of the cell
+            var value = input ? input.value : cell.textContent;
+            var color = cell.style.backgroundColor;
+            
+            // Push the value to the row data
+            rowData.push({
+                v: value,
+                s: {
+                    fill: { fgColor: { rgb: color } }
+                }
+            });
+        });
+        
+        // Push the row data to the worksheet data
+        ws_data.push(rowData);
+    });
+    
+    // Add the worksheet data to the worksheet
+    var ws = XLSX.utils.aoa_to_sheet(ws_data);
+    wb.Sheets["Sheet1"] = ws;
+    
     // Save the workbook as an XLSX file
     XLSX.writeFile(wb, "shifts.xlsx");
 }
-
-
-
-function getXLSXColumnName(index) {
-    var dividend = index + 1;
-    var columnName = "";
-    var modulo;
-
-    while (dividend > 0) {
-        modulo = (dividend - 1) % 26;
-        columnName = String.fromCharCode(65 + modulo) + columnName;
-        dividend = Math.floor((dividend - modulo) / 26);
-    }
-
-    return columnName;
-}
-
 
 function autofillTable() {
     var table = document.getElementsByTagName("table")[0];
