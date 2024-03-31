@@ -86,18 +86,28 @@ function removeMarkedDay(day) {
     }
 }
 
+function markUnavaliability(cell) {
+    cell.style.backgroundColor = "red";
+    cell.innerHTML = "-";
+}
 
+function markShift(cell) {
+    cell.style.backgroundColor = "green";
+    cell.innerHTML = "1";
+}
+
+function markEmpty(cell) {
+    cell.style.backgroundColor = "";
+    cell.innerHTML = "";
+}
 
 function markUnavaliabilityOrShift(cell) {
     if (cell.style.backgroundColor === "red") {
-        cell.style.backgroundColor = "green";
-        cell.innerHTML = "1";
+        markShift(cell);
     } else if (cell.style.backgroundColor === "green") {
-        cell.style.backgroundColor = "";
-        cell.innerHTML = "";
+        markEmpty(cell);
     } else {
-        cell.style.backgroundColor = "red";
-        cell.innerHTML = "-";
+        markUnavaliability(cell);
     }
     calculateRowTotals()
 }
@@ -182,37 +192,61 @@ function exportToExcel() {
     XLSX.writeFile(wb, "table_data.xlsx");
 }
 
+
 function autofillTable() {
-    var table = document.querySelector('table');
-    var rows = table.querySelectorAll('tr');
-    var columnAssignments = {}; // Object to track assignments in each column
+    var table = document.getElementsByTagName("table")[0];
+    var rows = table.getElementsByTagName("tr");
 
-    // Initialize column assignments tracking
-    for (var i = 0; i < rows[0].children.length; i++) {
-        columnAssignments[i] = false; // Initialize all columns as unassigned
+    // Initialize an array to keep track of assigned days
+    var assignedDays = new Array(rows[0].cells.length - 4).fill(false);
+
+    // Initialize an array to keep track of the number of assignments per row
+    var assignmentsPerRow = new Array(rows.length - 1).fill(0);
+
+    // Create an array of days in random order
+    var days = [];
+    for (var j = 4; j < rows[0].cells.length; j++) {
+        days.push(j);
     }
+    shuffleArray(days);
 
-    rows.forEach(function(row) {
-        var cells = row.querySelectorAll('td');
+    // Iterate over each day in random order
+    for (var k = 0; k < days.length; k++) {
+        var j = days[k];
 
-        // Loop through cells starting from the third column
-        for (var i = 2; i < cells.length; i++) {
-            var columnIndex = i - 2;
+        // Check if this day has been assigned already and if the previous and next days are not assigned
+        if (!assignedDays[j - 4] && (!assignedDays[j - 5] || !assignedDays[j - 3])) {
+            // Iterate over each row, skipping the first and last rows
+            for (var i = 1; i < rows.length - 1; i++) {
+                var cells = rows[i].getElementsByTagName("td");
 
-            // Check if the cell is empty and not marked as unavailable ("-")
-            if (cells[i].innerHTML === "" && cells[i].style.backgroundColor !== "red") {
-                if (!columnAssignments[columnIndex]) {
-                    // If no assignment in the column, assign the cell
-                    cells[i].innerHTML = "1";
-                    columnAssignments[columnIndex] = true; // Mark column as assigned
-                } else {
-                    // If there is already an assignment in the column, clear the cell
-                    cells[i].innerHTML = "";
+                // Skip if the cell already has "-"
+                if (cells[j].innerHTML !== "-") {
+                    // Check if the current row can accept more assignments and there are no consecutive assigned days
+                    if (assignmentsPerRow[i - 1] < parseInt(cells[1].getElementsByTagName("input")[0].value) && !assignedDays[j - 5] && !assignedDays[j - 3]) {
+                        // Mark the cell as assigned
+                        markShift(cells[j]);
+                        // Increment the assignments count for this row
+                        assignmentsPerRow[i - 1]++;
+                        // Mark this day as assigned
+                        assignedDays[j - 4] = true;
+                        // Break the loop to move to the next day
+                        break;
+                    }
                 }
             }
         }
-    });
+    }
 
-    // Update row totals after autofill
-    calculateRowTotals();
+    calculateRowTotals(); // Recalculate totals after autofilling
 }
+
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+

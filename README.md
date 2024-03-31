@@ -13,7 +13,7 @@ Note that cells with tha number must be clickables and change color to gray if p
 make the autofillTable() function. based on the following rules
 - "1" means assigns
 - assign each day (column) one "1"
-- every row must have at most 3 assignments
+- every row must have at most the number of column  assignments
 - a cell can not be assign if there is the "-" in the cell
 # export to excel 
 name not exporting
