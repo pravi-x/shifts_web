@@ -1,4 +1,9 @@
 function generateTable() {
+    // clear the table container
+    document.getElementById("tableContainer").innerHTML = "";
+    // clear the marked days
+    markedDays = [];
+
     var rowsInput = document.getElementById("rows");
     var columnsInput = document.getElementById("columns");
 
@@ -201,45 +206,76 @@ function autofillTable() {
     var assignedDays = new Array(rows[0].cells.length - 4).fill(false);
 
     // Initialize an array to keep track of the number of assignments per row
-    var assignmentsPerRow = new Array(rows.length - 1).fill(0);
+    var assignmentsPerRow = new Array(rows.length - 2).fill(0);
 
-    // Create an array of days in random order
-    var days = [];
-    for (var j = 4; j < rows[0].cells.length; j++) {
-        days.push(j);
+    // Initialize an array to keep track of the maximum number of assignments per row
+    var maxAssignmentsPerRow = [];
+    for (var i = 1; i < rows.length - 1; i++) {
+        maxAssignmentsPerRow.push(parseInt(rows[i].cells[1].getElementsByTagName("input")[0].value));
     }
-    shuffleArray(days);
 
-    // Iterate over each day in random order
-    for (var k = 0; k < days.length; k++) {
-        var day = days[k];
+    // Every employee must have at most one assignment on the marked days
+    // Avg martked days per person are
+    if (markedDays.length != 0) {
+        var markedDaysPerPerson = Math.floor(markedDays.length / (rows.length - 2));
+    } else {
+        var markedDaysPerPerson = 0;
+    }
 
-        // Iterate over each row
-        for (var i = 1; i < rows.length; i++) {
-            var cells = rows[i].getElementsByTagName("td");
+    // shuffle marked days and assign them to each person
+    var markedDaysCopy = markedDays.slice(); // Copy the array of marked days
+    shuffleArray(markedDaysCopy); // Shuffle the array of marked days
 
-            // Check if the day is marked as a holiday
-            if (markedDays.includes(day - 3)) {
-                continue;
-            }
+    for (var i = 1; i < rows.length - 1; i++) // Iterate over each row except the first and last one
+    {
+        var cells = rows[i].getElementsByTagName("td"); // Get the cells of the row
 
-            // Check if the row is already full
-            if (assignmentsPerRow[i - 1] >= parseInt(cells[1].getElementsByTagName("input")[0].value)) {
-                continue;
-            }
+        for (var j = 4; j < cells.length; j++) // Iterate over each cell except the first three
+        {
+            if (markedDaysCopy.length > 0) {
+                var day = markedDaysCopy.pop(); // Get the day from the shuffled array
 
-            // Check if the day is already assigned
-            if (assignedDays[day - 4]) {
-                continue;
-            }
+                if (isValidAssignment(i, cells, day - 1, assignmentsPerRow, maxAssignmentsPerRow, assignedDays)) {
 
-            // Assign the day
-            markShift(cells[day]);
-            assignedDays[day - 4] = true;
-            assignmentsPerRow[i - 1]++;
+                    // Adicional check to make sure that the marked days are distributed evenly
+                    if (assignmentsPerRow[i - 1] < markedDaysPerPerson) {
+
+                        markShift(cells[day + 3]); // Mark the cell as a shift
+                        assignedDays[day - 1] = true; // Mark the day as assigned
+                        assignmentsPerRow[i - 1]++; // Increment the number of assignments for the row
+                    } else {
+                        markedDaysCopy.push(day); // Add the day back to the array
+                    }  
+                } 
+            }   
         }
     }
 
+    // Create an array of days in random order
+    var days = []; // the day are stored from 0 to 30 in the array (depending on the month)
+    for (var j = 0; j < rows[0].cells.length-4; j++) {
+        days.push(j);
+        console.log(j);
+    }
+    // Shuffle the array of days
+    shuffleArray(days);
+
+    for (var i = 1; i < rows.length - 1; i++) // Iterate over each row except the first and last one
+    {
+        var cells = rows[i].getElementsByTagName("td"); // Get the cells of the row
+
+        for (var j = 4; j < cells.length; j++) // Iterate over each cell except the first three
+        {
+            var day = days[j - 4]; // Get the day from the shuffled array
+
+            if (isValidAssignment(i, cells, day, assignmentsPerRow, maxAssignmentsPerRow, assignedDays)) {
+                markShift(cells[day + 4]); // Mark the cell as a shift
+                assignedDays[day] = true; // Mark the day as assigned
+                assignmentsPerRow[i - 1]++; // Increment the number of assignments for the row
+            }
+        }
+
+    }
     calculateRowTotals(); // Recalculate totals after autofilling
 }
 
@@ -252,3 +288,31 @@ function shuffleArray(array) {
     }
 }
 
+function isValidAssignment(i, cells, day, assignmentsPerRow, maxAssignmentsPerRow, assignedDays) {
+    // Check if the day is marked as unavailable "-"
+    if (cells[day + 4].innerHTML === "-") {
+        return false;
+    }
+    // Check if the row has reached the maximum number of assignments
+    if (assignmentsPerRow[i - 1] >= maxAssignmentsPerRow[i - 1]) {
+        return false;
+    }
+
+    // Check if the day is already assigned
+    if (assignedDays[day]) {
+        return false;
+    }
+
+    // Check if the next cell is not the last and if it is already assigned as a shift
+    if (day < cells.length - 5 && cells[day + 5].innerHTML === "1") {
+        return false;
+    }
+
+    // Check if the previous cell is not the first and if it is already assigned as a shift
+    if (day > 0 && cells[day + 3].innerHTML === "1") {
+        return false;
+    }
+
+
+    return true;
+}
