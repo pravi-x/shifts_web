@@ -60,6 +60,19 @@ th, td {
 th {
     background-color: #f2f2f2;
 }
+
+
+
+table tr:first-child {
+    font-weight: bold;
+    background-color:#f2f2f2
+}
+
+table tr:last-child {
+    font-weight: bold;
+    background-color:#f2f2f2
+}
+
 td:nth-child(1){
     width: 200px;
 }
@@ -79,6 +92,14 @@ td:nth-child(n+5):hover {
 
 td.gray {
     background-color: gray;
+}
+
+/* make the first  column fixed */
+td:nth-child(1),td:nth-child(2),
+td:nth-child(3), td:nth-child(4) {
+    position: sticky;
+    left: 0;
+    background-color: #f2f2f2;
 }
 
 /* Improve button styling */

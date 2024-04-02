@@ -247,7 +247,7 @@ function autofillTable() {
     // Every employee must have at most one assignment on the marked days
     // Avg martked days per person are
     if (markedDays.length != 0) {
-        var markedDaysPerPerson = Math.floor(markedDays.length / (rows.length - 2));
+        var markedDaysPerPerson = Math.round(markedDays.length / (rows.length - 2));
     } else {
         var markedDaysPerPerson = 0;
     }
