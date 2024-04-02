@@ -252,6 +252,17 @@ function autofillTable() {
         var markedDaysPerPerson = 0;
     }
 
+    //check if the table has have values in the cells. if it has update the proper arrays
+    for (var i = 1; i < rows.length - 1; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        for (var j = 4; j < cells.length; j++) {
+            if (cells[j].innerHTML === "1") {
+                assignedDays[j - 4] = true;
+                assignmentsPerRow[i - 1]++;
+            }
+        }
+    }
+
     // shuffle marked days and assign them to each person
     var markedDaysCopy = markedDays.slice(); // Copy the array of marked days
     shuffleArray(markedDaysCopy); // Shuffle the array of marked days
