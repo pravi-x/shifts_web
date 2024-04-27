@@ -372,17 +372,8 @@ function clearTable() {
 }
 
 
-function toggleParagraph() {
-    var paragraph = document.getElementById("description");
-    if (paragraph.style.display === "none") {
-        paragraph.style.display = "block";
-    } else {
-        paragraph.style.display = "none";
-    }
-}
-
-function toggleParagraph2() {
-    var paragraph = document.getElementById("description2");
+function toggleParagraph(id) {
+    var paragraph = document.getElementById(id);
     if (paragraph.style.display === "none") {
         paragraph.style.display = "block";
     } else {
