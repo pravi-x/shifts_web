@@ -6,14 +6,18 @@ body {
 
 h1 {
     text-align: center;
-    margin-top: 20px;
-    background-color: #f2f2f285;
+    background-color: #f2f2f2;
+    padding: 40px;
+    border-radius: 20px;
+    letter-spacing: 2px;
+    cursor: pointer;
 }
 
 h2 {
     text-align: left;
     margin-top: 20px;
     cursor: pointer;
+    letter-spacing: 2px;
 }
 
 p {
