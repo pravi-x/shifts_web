@@ -192,15 +192,11 @@ function exportToExcel() {
         for (var col = range.s.c; col <= range.e.c; col++) {
             var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
             var cell = sheet[cellAddress];
-            var value = cell && cell.v;
+            var backgroundColor = cell && cell.s && cell.s.bgColor && cell.s.bgColor.rgb;
 
-            if (value === "1") {
+            if (backgroundColor) {
                 sheet[cellAddress].s = {
-                    fill: { fgColor: { rgb: "00FF00FF" } } // Green color (RGBA format)
-                };
-            } else if (value === "-") {
-                sheet[cellAddress].s = {
-                    fill: { fgColor: { rgb: "FF0000FF" } } // Red color (RGBA format)
+                    bgc: { rgb: backgroundColor }
                 };
             }
         }
