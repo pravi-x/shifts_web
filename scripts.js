@@ -182,15 +182,45 @@ function calculateDaysTotals() {
 
 
 function exportToExcel() {
-    // Select the table element
     var table = document.querySelector('table');
-    
-    // Convert the table to a workbook
-    var workbook = XLSX.utils.table_to_book(table, {sheet: "Sheet1"});
-    
-    // Save the workbook as an Excel file
+    var workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+    var sheet = workbook.Sheets["Sheet1"];
+    var range = XLSX.utils.decode_range(sheet['!ref']);
+
+    // Iterate over each cell in the range
+    for (var row = range.s.r; row <= range.e.r; row++) {
+        for (var col = range.s.c; col <= range.e.c; col++) {
+            var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+            var cell = sheet[cellAddress];
+            var backgroundColor = cell && cell.s && cell.s.bgColor && cell.s.bgColor.rgb;
+
+            if (backgroundColor) {
+                sheet[cellAddress].s = {
+                    bgc: { rgb: backgroundColor }
+                };
+            }
+        }
+    }
+
+    // Get values from input fields in the first column and insert them into the Excel sheet
+    var inputs = table.querySelectorAll("tr td:nth-child(1) input");
+    for (var i = 0; i < inputs.length; i++) {
+        var value = inputs[i].value;
+        var cellAddress = XLSX.utils.encode_cell({ r: i + 1, c: 0 }); // Offset by 1 because Excel rows are 1-indexed
+        sheet[cellAddress] = { t: 's', v: value };
+    }
+
+    // Get values from input fields in the second column and insert them into the Excel sheet
+    var inputs = table.querySelectorAll("tr td:nth-child(2) input");
+    for (var i = 0; i < inputs.length; i++) {
+        var value = inputs[i].value;
+        var cellAddress = XLSX.utils.encode_cell({ r: i + 1, c: 1 }); // Offset by 1 because Excel rows are 1-indexed
+        sheet[cellAddress] = { t: 's', v: value };
+    }
+
     XLSX.writeFile(workbook, 'schedule.xlsx');
 }
+
 
 
 
