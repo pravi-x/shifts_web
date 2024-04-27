@@ -20,6 +20,8 @@ p {
     text-align: left;
     margin-top: 20px;
     margin-left: 20px; /* Add margin from the left */
+    letter-spacing: 0.5px; /* Add letter spacing for better readability */
+    
 }
 
 label {
@@ -97,6 +99,9 @@ td:nth-child(3), td:nth-child(4) {
 td:nth-child(n+5) {
     width: calc((100% - 200px - 50px - 50px - 50px) / 5);
 }
+td input[type="text"] {
+    width: 80%;
+}
 
 
 td:nth-child(n+5):hover {
@@ -137,25 +142,30 @@ td:nth-child(3), td:nth-child(4) {
     background-color: #45a049; /* Darken background color on hover */
 }
 
-/* Improve data container styling */
 .data-container {
-    display: flex;
-    flex-direction: column; /* Arrange items vertically */
-    align-items: center; /* Center align items horizontally */
-    margin-top: 20px;
+    text-align: center; /* Center the content horizontally */
+    background-color: #f2f2f2;
+    padding: 1px;
+    border-radius: 10px;
+
+    margin: 20px auto;
+    max-width: 300px;
 }
 
-/* Style labels for better readability */
 .data-container label {
-    margin-bottom: 5px; /* Add some space between labels */
+    display: block; /* Change display to block */
+    width: 100%; /* Set width to 100% */
+    text-align: center; /* Center the text */
+    margin-bottom: 1px;
+    font-weight: bold;
 }
 
-/* Style input fields */
-.data-container input {
-    padding: 8px; /* Add padding to input fields */
-    margin-bottom: 10px; /* Add space between input fields */
-    border-radius: 5px; /* Add border-radius for rounded corners */
-    border: 1px solid #ccc; /* Add a subtle border */
-    width: 200px; /* Set a fixed width for better consistency */
-    box-sizing: border-box; /* Include padding and border in input width */
+.data-container input[type="number"] {
+    display: inline-block; /* Display the input field inline */
+    width: 60px; /* Set width to 50px */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 5px;
 }
