@@ -10,6 +10,18 @@ h1 {
     background-color: #f2f2f285;
 }
 
+h2 {
+    text-align: left;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+
+p {
+    text-align: left;
+    margin-top: 20px;
+}
+
 label {
     display: block;
     margin-top: 10px;

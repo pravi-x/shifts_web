@@ -1,19 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Table Generator</title>
+    <title>ΥΠΟΛΟΓΙΜΟΣ ΥΠΗΡΕΣΙΩΝ - ΒΑΡΔΙΩΝ</title>
 
     <link rel="stylesheet" href="style.css">
         
     </style>
 </head>
 <body>
-    <h1>Table Generator</h1>
+    <h1>ΥΠΟΛΟΓΙΜΟΣ ΥΠΗΡΕΣΙΩΝ - ΒΑΡΔΙΩΝ</h1>
+    <h2 onclick="toggleParagraph()">ΠΕΡΙΓΡΑΦΗ</h2>
+    <p id="description">
+        Το παρόν εργαλείο αποσκοπέι στον ευκολότερο υπολογισμό των υπηρεσιών. Σχεδιάστηκε για μηνιαίο υπολογισμό, αλλά μπορεί να εκτελεστεί και με διαφορετικό αριθμό ημερών.
+    <h2 onclick="toggleParagraph2()">ΟΔΗΓΙΕΣ</h2>
+    <p id="description2">
+        ΒΗΜΑ 1: Εισάγετε τον αριθμό των ατόμων και τον αριθμό των ημερών του μήνα που θέλετε να υπολογίσετε τις υπηρεσίες.<br>
+        ΒΗΜΑ 2: Πατήστε το κουμπί "Generate New Table" για να δημιουργηθεί ο πίνακας.<br>
+        ΒΗΜΑ 3: Χαρακτηρίστε με κλικ στις ανάλογες ημερομηνίες τις αργείες του μήνα (γκρι χρώμα). Με δεύτερο κλικ στο ίδιο κουτάκι θα γίνει εκκαθάριση του κουτιού.<br>
+        ΒΗΜΑ 4: Συμπληρώστε τον πίνακα με τις υπηρεσίες των ατόμων. Με ένα κλικ (κόκκινο χρώμα) η μέρα θα χαρακτηρηστεί ως μη διαθέσιμη για αυτό το άτομο. Με δεύτερο κλικ στο ίδιο κουτάκι θα οριστεί ως μέρα υπηρεσίας. Με τρίτο κλικ θα γίνει εκκαθάριση του κουτιού<br>
+        ΒΗΜΑ 5: Πατήστε το κουμπί "Autofill" για να συμπληρωθεί αυτόματα σύμφωνα με τις διαθέσιμες μέρες και τις μέγιστες δυνατές για τον καθένα. Μπορούν να γίνει έπειτα (ή πριν την αυτόματη συμπλήρωση) και χειροκίνητες αλλαγές-εισαγωγές.<br>
+        ΒΗΜΑ 6: Πατήστε το κουμπί "Export to Excel" για να εξάγετε τον πίνακα σε αρχείο Excel στον υπολογιστή σας.
+    </p>
+    
     <div class="data-container">
-        <label for="rows">Number of people:</label>
+        <label for="rows">ΣΥΝΟΛΟ ΑΤΟΜΩΝ:</label>
         <input type="text" id="rows" name="rows" required pattern="[1-9][0-9]*" title="Please enter a positive number" value="5">
 
-        <label for="columns"> and Number of Days(1-365):</label>
+        <label for="columns"> ΣΥΝΟΛΟ ΗΜΕΡΩΝ ΜΗΝΑ(1-365):</label>
         <input type="text" id="columns" name="columns" required pattern="^(0?[1-9]|[1-9][0-9]|[1-2][0-9]{2}|3[0-5][0-9]|36[0-5])$" title="Please enter a number between 1 and 365" value="30">
     </div>
     <div class="button-container">
@@ -28,6 +41,7 @@
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/tableexport@5.2.0/dist/js/tableexport.min.js"></script>
+    
 
     <script src="scripts.js"></script>
 </body>
