@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     margin: 0;
     padding: 0;
 }
@@ -7,6 +7,7 @@ body {
 h1 {
     text-align: center;
     margin-top: 20px;
+    background-color: #f2f2f285;
 }
 
 label {
@@ -19,6 +20,14 @@ input[type="text"] {
     padding: 5px;
 }
 
+input[type="number"] {
+    width: 30px;
+    padding: 5px;
+    border: none; /* Remove the border */
+    align-content: center;
+
+}
+
 button {
     display: block;
     margin: 10px auto;
@@ -27,6 +36,8 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    font-size: 16px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 button:hover {
@@ -52,7 +63,32 @@ th {
     background-color: #f2f2f2;
 }
 
-td:hover {
+
+
+table tr:first-child {
+
+    background-color:#f2f2f2
+}
+
+table tr:last-child {
+
+    background-color:#f2f2f2
+}
+
+td:nth-child(1){
+    width: 200px;
+}
+td:nth-child(2),
+td:nth-child(3), td:nth-child(4) {
+    width: 50px; /* Adjust the width as desired */
+}
+/* Make the rest of the columns fit evenly until the end */
+td:nth-child(n+5) {
+    width: calc((100% - 200px - 50px - 50px - 50px) / 5);
+}
+
+
+td:nth-child(n+5):hover {
     background-color: #f5f5f5;
 }
 
@@ -60,19 +96,55 @@ td.gray {
     background-color: gray;
 }
 
+/* make the first  column fixed */
+td:nth-child(1),td:nth-child(2),
+td:nth-child(3), td:nth-child(4) {
+    position: sticky;
+    left: 0;
+    background-color: #f2f2f2;
+}
+
+/* Improve button styling */
 .button-container {
     display: flex;
-    justify-content: space-between; /* Distribute buttons evenly */
-    align-items: center; /* Align items vertically in the center */
-    margin-bottom: 1px; /* Add some space between buttons and table */
+    justify-content: center; /* Center align buttons */
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 .button-container button {
-    padding: 10px;
+    padding: 12px 20px; /* Increase padding for better clickability */
+    border-radius: 25px; /* Increase border-radius for more rounded corners */
+    border: none; /* Remove border for a cleaner look */
+    background-color: #4CAF50; /* Add background color */
+    color: white; /* Set text color to white for better contrast */
+    font-size: 16px; /* Increase font size for better readability */
+    cursor: pointer; /* Add pointer cursor for better UX */
+    transition: background-color 0.3s ease; /* Add transition for smooth hover effect */
 }
 
-.button-container button:not(:last-child) {
-    margin-right: 1px; /* Add right margin to create 5px spacing between buttons */
+.button-container button:hover {
+    background-color: #45a049; /* Darken background color on hover */
 }
 
+/* Improve data container styling */
+.data-container {
+    display: flex;
+    flex-direction: column; /* Arrange items vertically */
+    align-items: center; /* Center align items horizontally */
+    margin-top: 20px;
+}
 
+/* Style labels for better readability */
+.data-container label {
+    margin-bottom: 5px; /* Add some space between labels */
+}
+
+/* Style input fields */
+.data-container input {
+    padding: 8px; /* Add padding to input fields */
+    margin-bottom: 10px; /* Add space between input fields */
+    border-radius: 5px; /* Add border-radius for rounded corners */
+    border: 1px solid #ccc; /* Add a subtle border */
+    width: 200px; /* Set a fixed width for better consistency */
+    box-sizing: border-box; /* Include padding and border in input width */
+}

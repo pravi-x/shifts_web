@@ -185,10 +185,24 @@ function exportToExcel() {
     // Select the table element
     var table = document.querySelector('table');
 
-    // Get all rows of the table
-    var rows = table.querySelectorAll('tr');
-    
-    // Create a workbook
+    // Convert table data to a worksheet
+    var ws = XLSX.utils.table_to_sheet(table);
+
+    // Get the input values and background colors of columns 0 and 1
+    var rows = table.getElementsByTagName("tr");
+    for (var i = 1; i < rows.length - 1; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        var input0 = cells[0].getElementsByTagName("input")[0].value;
+        var input1 = cells[1].getElementsByTagName("input")[0].value;
+        var color0 = cells[0].style.backgroundColor;
+        var color1 = cells[1].style.backgroundColor;
+
+        // Set values in the worksheet
+        ws[getXLSXColumnName(0) + (i + 1)] = { v: input0, s: { fill: { fgColor: { rgb: color0 } } } };
+        ws[getXLSXColumnName(1) + (i + 1)] = { v: input1, s: { fill: { fgColor: { rgb: color1 } } } };
+    }
+
+    // Create a new workbook and add the worksheet
     var wb = XLSX.utils.book_new();
     wb.SheetNames.push("Sheet1");
     
@@ -231,6 +245,22 @@ function exportToExcel() {
     XLSX.writeFile(wb, "shifts.xlsx");
 }
 
+
+
+function getXLSXColumnName(index) {
+    var dividend = index + 1;
+    var columnName = "";
+    var modulo;
+
+    while (dividend > 0) {
+        modulo = (dividend - 1) % 26;
+        columnName = String.fromCharCode(65 + modulo) + columnName;
+        dividend = Math.floor((dividend - modulo) / 26);
+    }
+
+    return columnName;
+}
+
 function autofillTable() {
     var table = document.getElementsByTagName("table")[0];
     var rows = table.getElementsByTagName("tr");
@@ -250,9 +280,20 @@ function autofillTable() {
     // Every employee must have at most one assignment on the marked days
     // Avg martked days per person are
     if (markedDays.length != 0) {
-        var markedDaysPerPerson = Math.floor(markedDays.length / (rows.length - 2));
+        var markedDaysPerPerson = Math.round(markedDays.length / (rows.length - 2));
     } else {
         var markedDaysPerPerson = 0;
+    }
+
+    //check if the table has have values in the cells. if it has update the proper arrays
+    for (var i = 1; i < rows.length - 1; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        for (var j = 4; j < cells.length; j++) {
+            if (cells[j].innerHTML === "1") {
+                assignedDays[j - 4] = true;
+                assignmentsPerRow[i - 1]++;
+            }
+        }
     }
 
     // shuffle marked days and assign them to each person
