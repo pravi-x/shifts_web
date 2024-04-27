@@ -2,28 +2,41 @@ body {
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     margin: 0;
     padding: 0;
+
 }
 
 h1 {
     text-align: center;
-    background-color: #f2f2f2;
+    text-size-adjust: 30px;
+    color: white;
+    background-color: #3fa042ec;
     padding: 40px;
     border-radius: 20px;
-    letter-spacing: 2px;
+    letter-spacing: 4px;
     cursor: pointer;
+}
+
+h1:hover {
+    background-color: #3fa042;
 }
 
 h2 {
     text-align: left;
+    color: #3fa042;
     margin-top: 20px;
+    margin-left: 20px; /* Add margin from the left */
     cursor: pointer;
     letter-spacing: 2px;
+    text-shadow: #ccc 1px 1px 1px;
+}
+h2:hover {
+    color: #3fa042ec;
 }
 
 p {
     text-align: left;
     margin-top: 20px;
-    margin-left: 20px; /* Add margin from the left */
+    margin-left: 30px; /* Add margin from the left */
     letter-spacing: 0.5px; /* Add letter spacing for better readability */
     
 }
