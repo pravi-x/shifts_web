@@ -20,13 +20,13 @@ function generateTable() {
             for (var j = 0; j < columns + 4; j++) {
                 if (i === 0) {
                     if (j === 0) {
-                        table += "<td>Name</td>";
+                        table += "<td>Όνομα</td>";
                     } else if (j === 1) {
-                        table += "<td>Max</td>";
+                        table += "<td>Μέγιστο</td>";
                     } else if (j === 2) {
-                        table += "<td>Total</td>";
+                        table += "<td>Σύνολο</td>";
                     } else if (j === 3) {
-                        table += "<td>Total Holidays</td>";
+                        table += "<td>Σύνολο Αργιών</td>";
                     } else {
                         table += "<td onclick=\"markHoliday(this)\">" + (j - 3) + "</td>";
                     }
@@ -50,7 +50,7 @@ function generateTable() {
 
         // Add a row that calculates the total for each column
         table += "<tr>";
-        table += "<td>Total</td>";
+        table += "<td>Σύνoλα</td>";
         table += "<td></td>";
         table += "<td></td>";
         table += "<td></td>";

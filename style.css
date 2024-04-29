@@ -38,7 +38,10 @@ p {
     margin-top: 20px;
     margin-left: 30px; /* Add margin from the left */
     letter-spacing: 0.5px; /* Add letter spacing for better readability */
-    
+    background-color: #f2f2f2; /* Add the same background color as data-container */
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 70%;
 }
 
 label {
