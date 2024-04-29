@@ -1,7 +1,9 @@
 function generateTable() {
     // clear the table container
     document.getElementById("tableContainer").innerHTML = "";
-    // clear the
+    
+    // clear the marked days
+    markedDays = [];
 
     var rowsInput = document.getElementById("rows");
     var columnsInput = document.getElementById("columns");
