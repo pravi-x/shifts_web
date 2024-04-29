@@ -187,22 +187,6 @@ function exportToExcel() {
     var table = document.querySelector('table');
     var workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
     var sheet = workbook.Sheets["Sheet1"];
-    var range = XLSX.utils.decode_range(sheet['!ref']);
-
-    // Iterate over each cell in the range
-    for (var row = range.s.r; row <= range.e.r; row++) {
-        for (var col = range.s.c; col <= range.e.c; col++) {
-            var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-            var cell = sheet[cellAddress];
-            var backgroundColor = cell && cell.s && cell.s.bgColor && cell.s.bgColor.rgb;
-
-            if (backgroundColor) {
-                sheet[cellAddress].s = {
-                    bgc: { rgb: backgroundColor }
-                };
-            }
-        }
-    }
 
     // Get values from input fields in the first column and insert them into the Excel sheet
     var inputs = table.querySelectorAll("tr td:nth-child(1) input");
@@ -220,10 +204,29 @@ function exportToExcel() {
         sheet[cellAddress] = { t: 's', v: value };
     }
 
+    // Set column widths based on the content of the cells
+    var columnWidths = [];
+    for (var i = 0; i < table.rows[0].cells.length; i++) {
+        var max = 0;
+        for (var j = 0; j < table.rows.length; j++) {
+            var cell = table.rows[j].cells[i];
+            var len = cell.innerText.length;
+            if (len > max) {
+                max = len;
+            }
+        }
+        columnWidths.push({ wch: max + 2 });
+    }
+    sheet['!cols'] = columnWidths;
+
+    // add color to the first row
+    for (var i = 0; i < table.rows[0].cells.length; i++) {
+        var cellAddress = XLSX.utils.encode_cell({ r: 0, c: i });
+        sheet[cellAddress].s = { fill: { fgColor: { rgb: "FF0000" } } };
+    }
+
     XLSX.writeFile(workbook, 'schedule.xlsx');
 }
-
-
 
 
 function autofillTable() {

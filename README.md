@@ -17,3 +17,101 @@ make the autofillTable() function. based on the following rules
 - a cell can not be assign if there is the "-" in the cell
 # export to excel 
 name not exporting
+
+## with color but no column with inputs and no greek letters
+```
+function exportToExcel() {
+    // Define your style class template including green, red, and gray colors
+    var style = "<style>.green { background-color: green; } .red { background-color: red; } .gray { background-color: gray; }</style>";
+
+    var table = document.querySelector('table');
+    var workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+    var sheet = workbook.Sheets["Sheet1"];
+    var range = XLSX.utils.decode_range(sheet['!ref']);
+
+    // Iterate over each cell in the range
+    for (var row = range.s.r; row <= range.e.r; row++) {
+        for (var col = range.s.c; col <= range.e.c; col++) {
+            var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+            var cell = sheet[cellAddress];
+            var backgroundColor = cell && cell.s && cell.s.bgColor && cell.s.bgColor.rgb;
+
+            // Update cell style to include corresponding CSS class
+            if (backgroundColor) {
+                if (backgroundColor === "00FF00") { // Green color
+                    sheet[cellAddress].s = {
+                        bgc: { rgb: backgroundColor },
+                        c: [{ s: { fill: { fgColor: { rgb: backgroundColor } } } }]
+                    };
+                } else if (backgroundColor === "FF0000") { // Red color
+                    sheet[cellAddress].s = {
+                        bgc: { rgb: backgroundColor },
+                        c: [{ s: { fill: { fgColor: { rgb: backgroundColor } } } }]
+                    };
+                } else if (backgroundColor === "808080") { // Gray color
+                    sheet[cellAddress].s = {
+                        bgc: { rgb: backgroundColor },
+                        c: [{ s: { fill: { fgColor: { rgb: backgroundColor } } } }]
+                    };
+                }
+            }
+        }
+    }
+
+    // Append the style to the Excel template
+    var uri = 'data:application/vnd.ms-excel;base64,';
+    var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head>' + style + '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>';
+    var base64 = function (s) {
+        return window.btoa(unescape(encodeURIComponent(s)));
+    };
+    var format = function (s, c) {
+        return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; });
+    };
+    var ctx = { worksheet: 'Sheet1', table: table.innerHTML };
+    window.location.href = uri + base64(format(template, ctx));
+}
+```
+
+## no color but column with inputs and greek letters
+```
+function exportToExcel() {
+    var table = document.querySelector('table');
+    var workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+    var sheet = workbook.Sheets["Sheet1"];
+    var range = XLSX.utils.decode_range(sheet['!ref']);
+
+    // Iterate over each cell in the range
+    for (var row = range.s.r; row <= range.e.r; row++) {
+        for (var col = range.s.c; col <= range.e.c; col++) {
+            var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+            var cell = sheet[cellAddress];
+            var backgroundColor = cell && cell.s && cell.s.bgColor && cell.s.bgColor.rgb;
+
+            if (backgroundColor) {
+                sheet[cellAddress].s = {
+                    bgc: { rgb: backgroundColor }
+                };
+            }
+        }
+    }
+
+    // Get values from input fields in the first column and insert them into the Excel sheet
+    var inputs = table.querySelectorAll("tr td:nth-child(1) input");
+    for (var i = 0; i < inputs.length; i++) {
+        var value = inputs[i].value;
+        var cellAddress = XLSX.utils.encode_cell({ r: i + 1, c: 0 }); // Offset by 1 because Excel rows are 1-indexed
+        sheet[cellAddress] = { t: 's', v: value };
+    }
+
+    // Get values from input fields in the second column and insert them into the Excel sheet
+    var inputs = table.querySelectorAll("tr td:nth-child(2) input");
+    for (var i = 0; i < inputs.length; i++) {
+        var value = inputs[i].value;
+        var cellAddress = XLSX.utils.encode_cell({ r: i + 1, c: 1 }); // Offset by 1 because Excel rows are 1-indexed
+        sheet[cellAddress] = { t: 's', v: value };
+    }
+
+    XLSX.writeFile(workbook, 'schedule.xlsx');
+}
+
+```
