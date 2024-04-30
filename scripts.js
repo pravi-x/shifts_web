@@ -184,49 +184,52 @@ function calculateDaysTotals() {
 
 
 function exportToExcel() {
-    var table = document.querySelector('table');
-    var workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
-    var sheet = workbook.Sheets["Sheet1"];
+    const table = document.querySelector('table');
+    const worksheet = XLSX.utils.table_to_sheet(table);
 
     // Get values from input fields in the first column and insert them into the Excel sheet
-    var inputs = table.querySelectorAll("tr td:nth-child(1) input");
-    for (var i = 0; i < inputs.length; i++) {
-        var value = inputs[i].value;
-        var cellAddress = XLSX.utils.encode_cell({ r: i + 1, c: 0 }); // Offset by 1 because Excel rows are 1-indexed
-        sheet[cellAddress] = { t: 's', v: value };
-    }
+    const firstColumnInputs = table.querySelectorAll("tr td:nth-child(1) input");
+    firstColumnInputs.forEach((input, index) => {
+        const value = input.value;
+        XLSX.utils.sheet_add_aoa(worksheet, [[value]], { origin: { r: index + 1, c: 0 } });
+    });
 
     // Get values from input fields in the second column and insert them into the Excel sheet
-    var inputs = table.querySelectorAll("tr td:nth-child(2) input");
-    for (var i = 0; i < inputs.length; i++) {
-        var value = inputs[i].value;
-        var cellAddress = XLSX.utils.encode_cell({ r: i + 1, c: 1 }); // Offset by 1 because Excel rows are 1-indexed
-        sheet[cellAddress] = { t: 's', v: value };
-    }
+    const secondColumnInputs = table.querySelectorAll("tr td:nth-child(2) input");
+    secondColumnInputs.forEach((input, index) => {
+        const value = input.value;
+        XLSX.utils.sheet_add_aoa(worksheet, [[value]], { origin: { r: index + 1, c: 1 } });
+    });
 
     // Set column widths based on the content of the cells
-    var columnWidths = [];
-    for (var i = 0; i < table.rows[0].cells.length; i++) {
-        var max = 0;
-        for (var j = 0; j < table.rows.length; j++) {
-            var cell = table.rows[j].cells[i];
-            var len = cell.innerText.length;
-            if (len > max) {
-                max = len;
+    const columnWidths = [];
+    table.querySelectorAll('tr').forEach(row => {
+        row.querySelectorAll('td').forEach((cell, columnIndex) => {
+            const len = cell.textContent.length;
+            columnWidths[columnIndex] = Math.max(columnWidths[columnIndex] || 0, len);
+        });
+    });
+    worksheet['!cols'] = columnWidths.map(width => ({ width: width * 1.2 }));
+
+    // Check the columns 4 to the end and apply cell styles based on their values
+    const range = XLSX.utils.decode_range(worksheet['!ref']);
+    for (let row = range.s.r; row <= range.e.r; row++) {
+        for (let col = 3; col <= range.e.c; col++) { // Adjusted starting index to 3 (4th column)
+            const cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
+            const cellValue = worksheet[cellAddress] ? worksheet[cellAddress].v : null;
+            if (cellValue === "-") {
+                worksheet[cellAddress].s = { fill: { fgColor: { rgb: "FFFF00" } } };
+            } else if (cellValue === "1") {
+                worksheet[cellAddress].s = { fill: { fgColor: { rgb: "FF00FF" } } };
             }
         }
-        columnWidths.push({ wch: max + 2 });
-    }
-    sheet['!cols'] = columnWidths;
-
-    // add color to the first row
-    for (var i = 0; i < table.rows[0].cells.length; i++) {
-        var cellAddress = XLSX.utils.encode_cell({ r: 0, c: i });
-        sheet[cellAddress].s = { fill: { fgColor: { rgb: "FF0000" } } };
     }
 
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     XLSX.writeFile(workbook, 'schedule.xlsx');
 }
+
 
 
 function autofillTable() {
