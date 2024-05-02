@@ -1,117 +1,40 @@
-create a html page that has a title and 2 fields to be completed by the user. 
-the first one is the rows and the second the columns (check that the entry is a number at both, ).
-under them put a button. When the user presses the button a table appears with rows = rows + 2 of the given rows from before and columns = columns + 3 of the given columns from before
+# Schedule Calculation Tool - Vardion
 
-The table is as follows :
-first row:
-Name | Total | Total Holidays | 1 | 2 | ... | 30
-Note that cells with tha number must be clickables and change color to gray if pressed
+## Description
 
-# TODO
-# autocomplete
-# manipulate rules of auto complete
-make the autofillTable() function. based on the following rules
-- "1" means assigns
-- assign each day (column) one "1"
-- every row must have at most the number of column  assignments
-- a cell can not be assign if there is the "-" in the cell
-# export to excel 
-name not exporting
+The **Schedule Calculation Tool** is a web-based application designed to facilitate the computation of work schedules, particularly tailored for the needs of Vardion. This tool aims to simplify the process of assigning duties and managing work shifts for a group of individuals across a specified period, typically a month.
 
-## with color but no column with inputs and no greek letters
-```
-function exportToExcel() {
-    // Define your style class template including green, red, and gray colors
-    var style = "<style>.green { background-color: green; } .red { background-color: red; } .gray { background-color: gray; }</style>";
+### Key Features
 
-    var table = document.querySelector('table');
-    var workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
-    var sheet = workbook.Sheets["Sheet1"];
-    var range = XLSX.utils.decode_range(sheet['!ref']);
+- **Dynamic Table Generation**: Users can input the number of individuals and the total number of days in a month to generate a corresponding table for schedule management.
+- **Interactive User Interface**: The application provides an intuitive interface where users can mark holidays, assign shifts, mark unavailability, and clear cells as needed.
+- **Automated Autofill Functionality**: This feature automatically populates the table with shift assignments based on specified constraints, such as maximum assignments per individual and marked holidays.
+- **Export to Excel**: Users can export the generated schedule to an Excel file for further processing or sharing.
 
-    // Iterate over each cell in the range
-    for (var row = range.s.r; row <= range.e.r; row++) {
-        for (var col = range.s.c; col <= range.e.c; col++) {
-            var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-            var cell = sheet[cellAddress];
-            var backgroundColor = cell && cell.s && cell.s.bgColor && cell.s.bgColor.rgb;
+## How to Use
 
-            // Update cell style to include corresponding CSS class
-            if (backgroundColor) {
-                if (backgroundColor === "00FF00") { // Green color
-                    sheet[cellAddress].s = {
-                        bgc: { rgb: backgroundColor },
-                        c: [{ s: { fill: { fgColor: { rgb: backgroundColor } } } }]
-                    };
-                } else if (backgroundColor === "FF0000") { // Red color
-                    sheet[cellAddress].s = {
-                        bgc: { rgb: backgroundColor },
-                        c: [{ s: { fill: { fgColor: { rgb: backgroundColor } } } }]
-                    };
-                } else if (backgroundColor === "808080") { // Gray color
-                    sheet[cellAddress].s = {
-                        bgc: { rgb: backgroundColor },
-                        c: [{ s: { fill: { fgColor: { rgb: backgroundColor } } } }]
-                    };
-                }
-            }
-        }
-    }
+### Getting Started
 
-    // Append the style to the Excel template
-    var uri = 'data:application/vnd.ms-excel;base64,';
-    var template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head>' + style + '<!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>';
-    var base64 = function (s) {
-        return window.btoa(unescape(encodeURIComponent(s)));
-    };
-    var format = function (s, c) {
-        return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; });
-    };
-    var ctx = { worksheet: 'Sheet1', table: table.innerHTML };
-    window.location.href = uri + base64(format(template, ctx));
-}
-```
+1. Clone or download the project repository to your local machine.
+2. Open the `index.html` file in a web browser.
 
-## no color but column with inputs and greek letters
-```
-function exportToExcel() {
-    var table = document.querySelector('table');
-    var workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
-    var sheet = workbook.Sheets["Sheet1"];
-    var range = XLSX.utils.decode_range(sheet['!ref']);
+or
 
-    // Iterate over each cell in the range
-    for (var row = range.s.r; row <= range.e.r; row++) {
-        for (var col = range.s.c; col <= range.e.c; col++) {
-            var cellAddress = XLSX.utils.encode_cell({ r: row, c: col });
-            var cell = sheet[cellAddress];
-            var backgroundColor = cell && cell.s && cell.s.bgColor && cell.s.bgColor.rgb;
+1. visit https://pravi-x.github.io/shifts_web/
 
-            if (backgroundColor) {
-                sheet[cellAddress].s = {
-                    bgc: { rgb: backgroundColor }
-                };
-            }
-        }
-    }
+### Instructions
 
-    // Get values from input fields in the first column and insert them into the Excel sheet
-    var inputs = table.querySelectorAll("tr td:nth-child(1) input");
-    for (var i = 0; i < inputs.length; i++) {
-        var value = inputs[i].value;
-        var cellAddress = XLSX.utils.encode_cell({ r: i + 1, c: 0 }); // Offset by 1 because Excel rows are 1-indexed
-        sheet[cellAddress] = { t: 's', v: value };
-    }
+1. **Input Parameters**: Enter the total number of individuals (`ΣΥΝΟΛΟ ΑΤΟΜΩΝ`) and the total number of days in the month (`ΣΥΝΟΛΟ ΗΜΕΡΩΝ`) in the respective input fields.
+2. **Generate Table**: Click the "Generate New Table" button to create the schedule table based on the provided parameters.
+3. **Mark Holidays**: Click on the cells corresponding to holidays to mark them in gray.
+4. **Assign Shifts**: Click on the cells to assign shifts (indicated by "1" in red) to individuals. Clicking again will clear the cell.
+5. **Autofill Table**: Click the "Autofill Table" button to automatically populate the schedule based on specified constraints.
+6. **Export to Excel**: Click the "Export to Excel" button to save the schedule as an Excel file on your computer.
 
-    // Get values from input fields in the second column and insert them into the Excel sheet
-    var inputs = table.querySelectorAll("tr td:nth-child(2) input");
-    for (var i = 0; i < inputs.length; i++) {
-        var value = inputs[i].value;
-        var cellAddress = XLSX.utils.encode_cell({ r: i + 1, c: 1 }); // Offset by 1 because Excel rows are 1-indexed
-        sheet[cellAddress] = { t: 's', v: value };
-    }
+## About
 
-    XLSX.writeFile(workbook, 'schedule.xlsx');
-}
+The **Schedule Calculation Tool** was developed to address the challenges encountered in managing work schedules efficiently. It was initially created for personal use and later adapted for broader utility.
 
-```
+For feedback, suggestions, or support, please contact the developer at [pravitas.dev@gmail.com](mailto:pravitas.dev@gmail.com). If you find this tool helpful and wish to support further development, consider making a contribution via PayPal at [https://paypal.me/hpravitas](https://paypal.me/hpravitas).
+
+Enjoy using the **Schedule Calculation Tool** and may it simplify your scheduling tasks effectively! 📅✨
