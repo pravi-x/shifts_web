@@ -1,3 +1,30 @@
+var translations = {};
+var currentLanguage = "gr";
+
+fetch('translations.json')
+    .then(response => response.json())
+    .then(data => {
+        translations = data;
+        translatePage();
+    })
+    .catch(error => {
+        console.error('Error fetching translations:', error);
+    });
+
+document.getElementById("changeLanguageButton").addEventListener("click", function() {
+    currentLanguage = currentLanguage === "gr" ? "eng" : "gr";
+    translatePage();
+});
+
+function translatePage() {
+    var elementsToTranslate = document.querySelectorAll("[data-translate-key]");
+
+    elementsToTranslate.forEach(element => {
+        var translationKey = element.getAttribute("data-translate-key");
+        element.textContent = translations[currentLanguage][translationKey];
+    });
+}
+
 function generateTable() {
     // clear the table container
     document.getElementById("tableContainer").innerHTML = "";

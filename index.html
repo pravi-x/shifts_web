@@ -1,49 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ΥΠΟΛΟΓΙΜΟΣ ΥΠΗΡΕΣΙΩΝ - ΒΑΡΔΙΩΝ </title>
+    <title>SHIFT CALCULATOR</title>
     <meta charset="UTF-8">
-
 
     <link rel="stylesheet" href="style.css">
         
     </style>
 </head>
 <body>
-    <h1 onclick="toggleParagraph('descr')">ΥΠΟΛΟΓΙΜΟΣ ΥΠΗΡΕΣΙΩΝ - ΒΑΡΔΙΩΝ</h1>
+    <button data-translate-key="button_language" id="changeLanguageButton"></button>
+    <h1 data-translate-key="title" onclick="toggleParagraph('descr')"></h1>
     <div id="descr" >
-        <h2 onclick="toggleParagraph('description1')">ΠΕΡΙΓΡΑΦΗ</h2>
-        <p id="description1" style="display: none;">
-            Το παρόν εργαλείο αποσκοπέι στον ευκολότερο υπολογισμό των υπηρεσιών.<br> 
-            Σχεδιάστηκε για μηνιαίο υπολογισμό, αλλά μπορεί να εκτελεστεί και με διαφορετικό αριθμό ημερών. <br>
-            Συνυπολογίζει την δίκαιη όσο είναι εφικτό κατανομή (και ανα μέρα αργίας).
-        </p>
-        <h2 onclick="toggleParagraph('description2')">ΟΔΗΓΙΕΣ</h2>
-        <p id="description2" style="display: none;">
-            ΒΗΜΑ 1: Εισάγετε τον αριθμό των ατόμων και τον αριθμό των ημερών του μήνα που θέλετε να υπολογίσετε τις υπηρεσίες.<br><br>
-            ΒΗΜΑ 2: Πατήστε το κουμπί <span style="color: green;">"Generate New Table"</span> για να δημιουργηθεί ο πίνακας.<br><br>
-            ΒΗΜΑ 3: Χαρακτηρίστε με κλικ στις ανάλογες ημερομηνίες τις αργίες του μήνα (γκρι χρώμα). Με δεύτερο κλικ στο ίδιο κουτάκι θα γίνει εκκαθάριση του κουτιού.<br><br>
-            ΒΗΜΑ 4: Συμπληρώστε τον πίνακα με τις υπηρεσίες των ατόμων. Με ένα κλικ (κόκκινο χρώμα) η μέρα θα χαρακτηρηστεί ως μη διαθέσιμη για αυτό το άτομο. Με δεύτερο κλικ στο ίδιο κουτάκι θα οριστεί ως μέρα υπηρεσίας. Με τρίτο κλικ θα γίνει εκκαθάριση του κουτιού<br><br>
-            ΒΗΜΑ 5: Πατήστε το κουμπί <span style="color: green;">"Autofill"</span> για να συμπληρωθεί αυτόματα σύμφωνα με τις διαθέσιμες μέρες και τις μέγιστες δυνατές για τον καθένα. Μπορούν να γίνει έπειτα (ή πριν την αυτόματη συμπλήρωση) και χειροκίνητες αλλαγές-εισαγωγές.<br><br>
-            ΒΗΜΑ 6: Πατήστε το κουμπί <span style="color: green;">Export to Excel"</span>" για να εξάγετε τον πίνακα σε αρχείο Excel στον υπολογιστή σας.
-        </p>
-
-        <h2 onclick="toggleParagraph('description3')">ΣΧΕΤΙΚΑ ΜΕ ΕΜΕΝΑ</h2>
-        <p id="description3" style="display: none;">
-            Το παρόν εργαλείο αναπτύχθηκε για προσωπική χρήση όταν βρέθηκα αντιμέτωπος με το συγκεκριμένο καθήκον ανάθεσης των υπηρεσιών.<br>
-            Έαν σας φάνηκε όσο βοηθητικό ήταν και σε εμένα, μη διστάσετε να με ενημερώσετε στο <a  href="pravitas.dev@gmail.com" target="_blank">pravitas.dev@gmail.com</a> και να με υποστηρίξετε με <br>ένα καφεδάκι ☕ στο <a href="https://paypal.me/hpravitas?country.x=GR&locale.x=el_GR" target="_blank">https://paypal.me/hpravitas</a>.
-        </p>
+        <h2 data-translate-key="description_header" onclick="toggleParagraph('description1')"></h2>
+            <p data-translate-key="description_text" id="description1" style="display: none;"></p>
+        <h2 data-translate-key="instructions_header" onclick="toggleParagraph('description2')"></h2>
+            <p data-translate-key="instructions_text" id="description2" style="display: none;"></p>
+        <h2 data-translate-key="about_header" onclick="toggleParagraph('description3')"></h2>
+            <p data-translate-key="about_text" id="description3" style="display: none;"> </p>
     </div>
     <p class="data-container"></div>
-        <label for="rows">ΣΥΝΟΛΟ ΑΤΟΜΩΝ:</label>
-        <input type="number" id="rows" name="rows" value="5" min="0">
-        <label for="columns"> ΣΥΝΟΛΟ ΗΜΕΡΩΝ (1-365):</label>
+        <label data-translate-key="rows_label" for="rows"></label>
+        <input type="number" id="rows" name="rows" value="8" min="0">
+        <label data-translate-key="cols_label" for="columns"> </label>
         <input type="number" id="columns" name="columns" value="30" min="0">
     <div class="button-container">
-        <button onclick="generateTable()">Generate New Table</button>
-        <button onclick="autofillTable()">Autofill Table</button>
-        <button onclick="clearTable()">Clear Table</button>
-        <button onclick="exportToExcel()">Export to Excel</button>
+        <button data-translate-key="button_generate" onclick="generateTable()"></button>
+        <button data-translate-key="button_autofill" onclick="autofillTable()"></button>
+        <button data-translate-key="button_clear" onclick="clearTable()"></button>
+        <button data-translate-key="button_export" onclick="exportToExcel()"></button>
     </div>
     
     
