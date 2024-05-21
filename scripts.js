@@ -47,13 +47,13 @@ function generateTable() {
             for (var j = 0; j < columns + 4; j++) {
                 if (i === 0) {
                     if (j === 0) {
-                        table += "<td>Όνομα</td>";
+                        table += '<td data-translate-key="name">Όνομα</td>';
                     } else if (j === 1) {
-                        table += "<td>Μέγιστο</td>";
+                        table += '<td data-translate-key="maximum">Μέγιστο</td>';
                     } else if (j === 2) {
-                        table += "<td>Σύνολο</td>";
+                        table += '<td data-translate-key="total">Σύνολο</td>';
                     } else if (j === 3) {
-                        table += "<td>Σύνολο Αργιών</td>";
+                        table += '<td data-translate-key="totalHolidays">Σύνολο Αργιών</td>';
                     } else {
                         table += "<td onclick=\"markHoliday(this)\">" + (j - 3) + "</td>";
                     }

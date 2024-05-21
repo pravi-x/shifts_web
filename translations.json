@@ -13,7 +13,11 @@
         "button_export": "Εξαγωγή σε Excel",
         "button_language": "English",
         "rows_label": "Εισαγωγή Ατόμων:",
-        "cols_label": "Εισαγωγή Ημερών:"
+        "cols_label": "Εισαγωγή Ημερών:",
+        "name": "Όνομα",
+        "maximum": "Μέγιστο",
+        "total": "Σύνολο",
+        "totalHolidays": "Σύνολο Αργιών"
     },
     "eng": {
         "title": "SHIFT CALCULATOR",
@@ -29,7 +33,11 @@
         "button_export": "Export to Excel",
         "button_language": "Ελληνικά",
         "rows_label": "Insert Number of People:",
-        "cols_label": "Insert Number of Days:"
+        "cols_label": "Insert Number of Days:",
+        "name": "Name",
+        "maximum": "Maximum",
+        "total": "Total",
+        "totalHolidays": "Total Holidays"
     }
 }
 
