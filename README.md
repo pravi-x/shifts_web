@@ -16,7 +16,7 @@ The **Schedule Calculation Tool** is a web-based application designed to facilit
 ### Getting Started
 
 1. Clone or download the project repository to your local machine.
-2. Open the `index.html` file in a web browser.
+2. Run `python -m http.server 8000` and visit http://localhost:8000.
 
 or
 
