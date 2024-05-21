@@ -185,4 +185,5 @@ td:nth-child(3), td:nth-child(4) {
     border-radius: 25px;
     border: none;
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    cursor: pointer; /* Add cursor style on hover */
 }
