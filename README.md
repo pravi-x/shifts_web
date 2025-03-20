@@ -10,10 +10,6 @@ The **Schedule Calculation Tool** is a web-based application designed to facilit
 - **Interactive User Interface**: The application provides an intuitive interface where users can mark holidays, assign shifts, mark unavailability, and clear cells as needed.
 - **Automated Autofill Functionality**: This feature automatically populates the table with shift assignments based on specified constraints, such as maximum assignments per individual and marked holidays.
 - **Export to Excel**: Users can export the generated schedule to an Excel file for further processing or sharing.
-
-## Analytics
-
- - https://analytics.google.com/analytics/web/#/p443903494/reports/intelligenthome
  
 ## How to Use
 
