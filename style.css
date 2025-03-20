@@ -196,3 +196,33 @@ td:nth-child(3), td:nth-child(4) {
     background-color:#5C1E4C;
 }
 
+/* FOOTER */
+.footer {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: auto;
+    font-size: 20px;
+    background: linear-gradient(135deg, #A63A3A, #A63A3A);
+    background-color: #A63A3A;
+    color: aliceblue;
+}
+
+.footer p {
+    color: #A63A3A;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.fa-github {
+    color: #D6E7C5;
+    font-size: 24px;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .fa-github:hover {
+    transform: rotate(360deg) scale(1.2);
+  }
