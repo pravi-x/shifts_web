@@ -4,7 +4,6 @@ body {
     padding: 0;
 }
 
-
 h1 {
     text-align: center;
     text-size-adjust: 30px;
@@ -17,7 +16,7 @@ h1 {
 }
 
 h1:hover {
-    color: #CDB87A;
+    color: #f8e7b7;
 }
 
 h2 {
@@ -38,10 +37,10 @@ p {
     margin-top: 20px;
     margin-left: 30px; /* Add margin from the left */
     letter-spacing: 0.5px; /* Add letter spacing for better readability */
-    background-color: #f2f2f2; /* Add the same background color as data-container */
+    background-color:#f8e7b7; /* Add the same background color as data-container */
     padding: 10px;
     border-radius: 10px;
-    max-width: 70%;
+    max-width: 90%;
 }
 
 label {
@@ -59,10 +58,7 @@ input[type="number"] {
     padding: 5px;
     border: none; /* Remove the border */
     align-content: center;
-
 }
-
-
 
 #tableContainer {
     margin-top: 20px;
@@ -131,6 +127,7 @@ td:nth-child(3), td:nth-child(4) {
     display: flex;
     justify-content: center; /* Center align buttons */
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    margin-bottom: 10px;
 }
 
 .button-container button {
@@ -151,12 +148,17 @@ td:nth-child(3), td:nth-child(4) {
 
 .data-container {
     text-align: center; /* Center the content horizontally */
-    background-color: #CDB87A;
+    background-color: #f8e7b7;
     padding: 1px;
     border-radius: 10px;
 
     margin: 20px auto;
     max-width: 300px;
+}
+
+#tableContainer {
+    margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 .data-container label {
@@ -215,14 +217,15 @@ td:nth-child(3), td:nth-child(4) {
     color: #A63A3A;
     margin-top: 10px;
     margin-bottom: 10px;
+    background-color: aliceblue;
 }
 
 .fa-github {
-    color: #D6E7C5;
+    color: aliceblue;
     font-size: 24px;
     transition: transform 0.3s ease-in-out;
-  }
-  
-  .fa-github:hover {
+}
+
+.fa-github:hover {
     transform: rotate(360deg) scale(1.2);
-  }
+}
