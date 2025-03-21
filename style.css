@@ -4,13 +4,18 @@ body {
     padding: 0;
 }
 
+::selection {
+    background-color: black;
+    color: white;
+}
+
 h1 {
     text-align: center;
     text-size-adjust: 30px;
     color: white;
     background-color: #A63A3A;
     padding: 40px;
-    border-radius: 20px;
+    margin-top: 0px;
     letter-spacing: 4px;
     cursor: pointer;
 }
@@ -40,7 +45,18 @@ p {
     background-color:#f8e7b7; /* Add the same background color as data-container */
     padding: 10px;
     border-radius: 10px;
-    max-width: 90%;
+    max-width: 70%;
+}
+
+.hidden {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.5s ease, max-height 0.5s ease;
+}
+.visible {
+    opacity: 1;
+    max-height: 500px; /* Αρκετά μεγάλο ώστε να ταιριάζει στο περιεχόμενο */
 }
 
 label {
@@ -151,7 +167,6 @@ td:nth-child(3), td:nth-child(4) {
     background-color: #f8e7b7;
     padding: 1px;
     border-radius: 10px;
-
     margin: 20px auto;
     max-width: 300px;
 }
@@ -179,23 +194,36 @@ td:nth-child(3), td:nth-child(4) {
     margin-bottom: 5px;
 }
 
-#changeLanguageButton {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px 20px;
-    border-radius: 25px;
-    border: none;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
-    cursor: pointer; /* Add cursor style on hover */
+.button-container button{
+    margin: 10px;
 }
 
 #exportToExcel {
     background-color: #0A0510;
 }
 
-#generateTable, #autofillTable, #clearTable{
-    background-color:#5C1E4C;
+#exportToExcel:hover {
+    background-color: #0a0510cc; /* Darken background color on hover */
+    transform: scale(1.1); /* Add zoom effect */
+    transition: transform 0.3s ease; /* Smooth transition for zoom effect */
+}
+
+#generateTable, #autofillTable, #clearTable {
+    background-color: #5C1E4C;
+}
+
+#generateTable:hover, #autofillTable:hover, #clearTable:hover {
+    background-color: #5c1e4ccc; /* Darken background color on hover */
+}
+
+a {
+    color: #A63A3A;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color:#0a0510cc;
 }
 
 /* FOOTER */

@@ -34,37 +34,45 @@
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
 
-    <button data-translate-key="button_language" id="changeLanguageButton"></button>
+    <!-- <button data-translate-key="button_language" id="changeLanguageButton"></button> -->
 
     <h1 data-translate-key="title" onclick="toggleParagraph('descr')"></h1>
     <div id="descr" >
-        <h2 data-translate-key="description_header" onclick="toggleParagraph('description1')"></h2>
-            <p data-translate-key="description_text" id="description1" style="display: none;"></p>
-        <h2 data-translate-key="instructions_header" onclick="toggleParagraph('description2')"></h2>
-            <p data-translate-key="instructions_text" id="description2" style="display: none;"></p>
-        <h2 data-translate-key="about_header" onclick="toggleParagraph('description3')"></h2>
-            <p data-translate-key="about_text" id="description3" style="display: none;"> </p>
+        <h2 onclick="toggleParagraph('description1')">ΠΕΡΙΓΡΑΦΗ</h2>
+            <p id="description1" style="display: none;">
+                Το παρόν εργαλείο αποσκοπέι στον ευκολότερο υπολογισμό των υπηρεσιών. 
+                <br> Σχεδιάστηκε για μηνιαίο υπολογισμό, αλλά μπορεί να εκτελεστεί και με διαφορετικό αριθμό ημερών. 
+                <br> Συνυπολογίζει την δίκαιη όσο είναι εφικτό κατανομή (και ΑΝΑ ΗΜΕΡΑ ΑΡΓΙΑΣ!).
+        <h2 onclick="toggleParagraph('description2')">ΟΔΗΓΙΕΣ</h2>
+            <p id="description2" style="display: none;">
+                    ⚪ <span style="color: white; background-color: #A63A3A; padding: 2px; border-radius: 5px;"> ΒΗΜΑ 1:</span> Εισάγετε τον αριθμό των ατόμων και τον αριθμό των ημερών του μήνα που θέλετε να υπολογίσετε τις υπηρεσίες. 
+               <br> ⚪ <span style="color: white; background-color: #A63A3A; padding: 2px; border-radius: 5px;"> ΒΗΜΑ 2:</span> Πατήστε το κουμπί <span style="color: white; background-color: #5C1E4C; border-radius: 20px; padding: 4px;"> Δημιουργία Νέου Πίνακα </span> για να δημιουργηθεί ο πίνακας. 
+               <br> ⚪ <span style="color: white; background-color: #A63A3A; padding: 2px; border-radius: 5px;"> ΒΗΜΑ 3:</span> Χαρακτηρίστε με κλικ στις ανάλογες ημερομηνίες τις αργίες του μήνα (γκρι χρώμα). Με δεύτερο κλικ στο ίδιο κουτάκι θα γίνει εκκαθάριση του κουτιού. 
+               <br> ⚪ <span style="color: white; background-color: #A63A3A; padding: 2px; border-radius: 5px;"> ΒΗΜΑ 4:</span> Συμπληρώστε τον πίνακα με τις υπηρεσίες των ατόμων. Με ένα κλικ (κόκκινο χρώμα) η μέρα θα χαρακτηριστεί ως μη διαθέσιμη για αυτό το άτομο. Με δεύτερο κλικ στο ίδιο κουτάκι θα οριστεί ως μέρα υπηρεσίας. Με τρίτο κλικ θα γίνει εκκαθάριση του κουτιού.
+               <br> ⚪ <span style="color: white; background-color: #A63A3A; padding: 2px; border-radius: 5px;"> ΒΗΜΑ 5:</span> Πατήστε το κουμπί <span style="color: white; background-color: #5C1E4C; border-radius: 20px; padding: 4px;"> Αυτόματη Συμπλήρωση Πίνακα </span> για να συμπληρωθεί αυτόματα σύμφωνα με τις διαθέσιμες μέρες και τις μέγιστες δυνατές για τον καθένα. Μπορούν να γίνει έπειτα (ή πριν την αυτόματη συμπλήρωση) και χειροκίνητες αλλαγές-εισαγωγές. 
+               <br> ⚪ <span style="color: white; background-color: #A63A3A; padding: 2px; border-radius: 5px;"> ΒΗΜΑ 6:</span> Πατήστε το κουμπί <span style="color: white; background-color: #0A0510; border-radius: 20px; padding: 4px;"> Εξαγωγή σε Excel </span> για να εξάγετε τον πίνακα σε αρχείο Excel στον υπολογιστή σας.</p>
+        <h2 onclick="toggleParagraph('description3')">ΣΧΕΤΙΚΑ ΜΕ ΕΜΕΝΑ</h2>
+            <p id="description3" style="display: none;">
+                Το παρόν εργαλείο αναπτύχθηκε για προσωπική χρήση όταν βρέθηκα αντιμέτωπος με το συγκεκριμένο καθήκον ανάθεσης των υπηρεσιών.
+                <br>  Έαν σας φάνηκε όσο βοηθητικό ήταν και σε εμένα, μη διστάσετε να με ενημερώσετε στο <a href="mailto:pravitas.dev@gmail.com">pravitas.dev@gmail.com</a> 
+                <br> και να με υποστηρίξετε με ένα καφεδάκι ☕ στο <a href="https://paypal.me/hpravitas" target="_blank">paypal</a>.
+            </p>
     </div>
     <p class="data-container"></div>
-        <label data-translate-key="rows_label" for="rows"></label>
-        <input type="number" id="rows" name="rows" value="8" min="0">
-        <label data-translate-key="cols_label" for="columns"> </label>
+        <label  for="rows">Εισαγωγή Ατόμων:</label>
+        <input type="number" id="rows" name="rows" value="10" min="0">
+        <label for="columns">Εισαγωγή Ημερών:</label>
         <input type="number" id="columns" name="columns" value="30" min="0">
     <div class="button-container">
-        <button id="generateTable" data-translate-key="button_generate" onclick="generateTable()"></button>
-        <button id="autofillTable" data-translate-key="button_autofill" onclick="autofillTable()"></button>
-        <button id="clearTable" data-translate-key="button_clear" onclick="clearTable()"></button>
-        <button id="exportToExcel" data-translate-key="button_export" onclick="exportToExcel()"></button>
+        <button id="generateTable" onclick="generateTable()">Δημιουργία Νέου Πίνακα</button>
+        <button id="autofillTable" onclick="autofillTable()">Αυτόματη Συμπλήρωση Πίνακα</button>
+        <button id="clearTable" onclick="clearTable()">Εκκαθάριση Πίνακα</button>
+        <button id="exportToExcel" onclick="exportToExcel()">Εξαγωγή σε Excel</button>
     </div>
     
     
     <div id="tableContainer"></div>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
-    <script src="https://unpkg.com/tableexport@5.2.0/dist/js/tableexport.min.js"></script>
-    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
-    <script src="scripts.js"></script>
-
     <footer class="footer">
         <p>
           Copyright ©
@@ -75,5 +83,11 @@
         </p>
         <a href="https://github.com/pravi-x" target="_blank"><i class="fab fa-github"></i></a>
     </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.4/xlsx.full.min.js"></script>
+    <script src="https://unpkg.com/tableexport@5.2.0/dist/js/tableexport.min.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    <script src="scripts.js"></script>
+
 </body>
 </html>

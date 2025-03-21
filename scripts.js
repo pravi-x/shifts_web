@@ -1,29 +1,3 @@
-var translations = {};
-var currentLanguage = "gr";
-
-fetch('translations.json')
-    .then(response => response.json())
-    .then(data => {
-        translations = data;
-        translatePage();
-    })
-    .catch(error => {
-        console.error('Error fetching translations:', error);
-    });
-
-document.getElementById("changeLanguageButton").addEventListener("click", function() {
-    currentLanguage = currentLanguage === "gr" ? "eng" : "gr";
-    translatePage();
-});
-
-function translatePage() {
-    var elementsToTranslate = document.querySelectorAll("[data-translate-key]");
-
-    elementsToTranslate.forEach(element => {
-        var translationKey = element.getAttribute("data-translate-key");
-        element.textContent = translations[currentLanguage][translationKey];
-    });
-}
 
 function generateTable() {
     // clear the table container
@@ -174,6 +148,7 @@ function calculateRowTotals() {
 function calculateCollumnsTotals() {
     var table = document.getElementsByTagName("table")[0];
     var rows = table.getElementsByTagName("tr");
+    var column1Total = 0;
     var column2Total = 0;
     var column3Total = 0;
 
@@ -256,7 +231,6 @@ function exportToExcel() {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     XLSX.writeFile(workbook, 'schedule.xlsx');
 }
-
 
 
 function autofillTable() {
@@ -408,10 +382,7 @@ function clearTable() {
 
 
 function toggleParagraph(id) {
-    var paragraph = document.getElementById(id);
-    if (paragraph.style.display === "none") {
-        paragraph.style.display = "block";
-    } else {
-        paragraph.style.display = "none";
-    }
+    let paragraph = document.getElementById(id);
+    paragraph.classList.toggle("hidden");
+    paragraph.classList.toggle("visible");
 }
