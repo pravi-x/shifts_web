@@ -34,8 +34,7 @@ function generateTable() {
                 } else {
                     if (j === 0) {
                         table += "<td><input type=\"text\"></td>";
-                    } else if (j === 1) {
-                        table += "<td><input type=\"number\" value=\"3\" min=\"0\"></td>";
+                        table += "<td><input id=\"maxAssignmentsRow" + i + "\" type=\"number\" value=\"3\" min=\"0\"></td>";
                     } else if (j === 2) {
                         table += "<td id=\"calculateRowTotals()\"></td>";
                     } else if (j === 3) {
@@ -66,6 +65,20 @@ function generateTable() {
 
         document.getElementById("tableContainer").innerHTML = table;
     }
+}
+
+function calculatemaxAssignmentsRowTotal() {
+    var table = document.getElementsByTagName("table")[0];
+    var rows = table.getElementsByTagName("tr");
+    var total = 0;
+
+    for (var i = 1; i < rows.length - 1; i++) {
+        var input = rows[i].querySelector("td:nth-child(2) input");
+        total += parseInt(input.value) || 0;
+    }
+
+    console.log("Total max assignments: " + total);
+    return total;
 }
 
 
@@ -136,55 +149,44 @@ function calculateRowTotals() {
                 }
             }
         }
-
+        
         cells[2].innerHTML = count || 0;
         cells[3].innerHTML = holidaysCount || 0;
     }
     holidaysCount = 0;
-    calculateCollumnsTotals()
-    calculateDaysTotals()
+    // rows[rows.length - 1].getElementsByTagName("td")[1].innerHTML = calculatemaxAssignmentsRowTotal();
+
 }
-
-function calculateCollumnsTotals() {
-    var table = document.getElementsByTagName("table")[0];
-    var rows = table.getElementsByTagName("tr");
-    var column1Total = 0;
-    var column2Total = 0;
-    var column3Total = 0;
-
-    for (var i = 1; i < rows.length - 1; i++) {
-        var cells = rows[i].getElementsByTagName("td");
-        column2Total += parseInt(cells[2].innerHTML) || 0;
-        column3Total += parseInt(cells[3].innerHTML) || 0;
+function isValidAssignment(i, cells, day, assignmentsPerRow, maxAssignmentsPerRow, assignedDays) {
+    // Check if the day is marked as unavailable "-"
+    if (cells[day + 4].innerHTML === "-") {
+        return false;
+    }
+    // Check if the row has reached the maximum number of assignments
+    if (assignmentsPerRow[i - 1] >= maxAssignmentsPerRow[i - 1]) {
+        return false;
     }
 
-    rows[rows.length - 1].getElementsByTagName("td")[2].innerHTML = column2Total;
-    rows[rows.length - 1].getElementsByTagName("td")[3].innerHTML = column3Total;
-}
-
-function calculateDaysTotals() {
-    var table = document.getElementsByTagName("table")[0];
-    var rows = table.getElementsByTagName("tr");
-    var daysTotals = [];
-
-    for (var j = 4; j < rows[0].cells.length; j++) {
-        var count = 0;
-
-        for (var i = 1; i < rows.length - 1; i++) {
-            var cells = rows[i].getElementsByTagName("td");
-
-            if (cells[j].innerHTML === "1") {
-                count++;
-            }
-        }
-
-        daysTotals.push(count);
-        rows[rows.length - 1].cells[j].innerHTML = count; // Set the total in the last row of each column
+    // Check if the day is already assigned
+    if (assignedDays[day]) {
+        return false;
     }
 
+    // Check if the next cell is not the last and if it is already assigned as a shift
+    if (day < cells.length - 5 && cells[day + 5].innerHTML === "1") {
+        return false;
+    }
+
+    // Check if the previous cell is not the first and if it is already assigned as a shift
+    if (day > 0 && cells[day + 3].innerHTML === "1") {
+        return false;
+    }
+
+
+    return true;
 }
 
-
+// Buttons logic
 function exportToExcel() {
     const table = document.querySelector('table');
     const worksheet = XLSX.utils.table_to_sheet(table);
@@ -231,7 +233,6 @@ function exportToExcel() {
     XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
     XLSX.writeFile(workbook, 'schedule.xlsx');
 }
-
 
 function autofillTable() {
     var table = document.getElementsByTagName("table")[0];
@@ -334,35 +335,6 @@ function shuffleArray(array) {
     }
 }
 
-function isValidAssignment(i, cells, day, assignmentsPerRow, maxAssignmentsPerRow, assignedDays) {
-    // Check if the day is marked as unavailable "-"
-    if (cells[day + 4].innerHTML === "-") {
-        return false;
-    }
-    // Check if the row has reached the maximum number of assignments
-    if (assignmentsPerRow[i - 1] >= maxAssignmentsPerRow[i - 1]) {
-        return false;
-    }
-
-    // Check if the day is already assigned
-    if (assignedDays[day]) {
-        return false;
-    }
-
-    // Check if the next cell is not the last and if it is already assigned as a shift
-    if (day < cells.length - 5 && cells[day + 5].innerHTML === "1") {
-        return false;
-    }
-
-    // Check if the previous cell is not the first and if it is already assigned as a shift
-    if (day > 0 && cells[day + 3].innerHTML === "1") {
-        return false;
-    }
-
-
-    return true;
-}
-
 function clearTable() {
     var table = document.getElementsByTagName("table")[0];
     var rows = table.getElementsByTagName("tr");
@@ -380,7 +352,7 @@ function clearTable() {
     calculateRowTotals();
 }
 
-
+// Paragraph logic
 function toggleParagraph(id) {
     let paragraph = document.getElementById(id);
     paragraph.classList.toggle("hidden");
