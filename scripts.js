@@ -149,44 +149,58 @@ function calculateRowTotals() {
                 }
             }
         }
-        
+
         cells[2].innerHTML = count || 0;
         cells[3].innerHTML = holidaysCount || 0;
     }
     holidaysCount = 0;
-    // rows[rows.length - 1].getElementsByTagName("td")[1].innerHTML = calculatemaxAssignmentsRowTotal();
-
-}
-function isValidAssignment(i, cells, day, assignmentsPerRow, maxAssignmentsPerRow, assignedDays) {
-    // Check if the day is marked as unavailable "-"
-    if (cells[day + 4].innerHTML === "-") {
-        return false;
-    }
-    // Check if the row has reached the maximum number of assignments
-    if (assignmentsPerRow[i - 1] >= maxAssignmentsPerRow[i - 1]) {
-        return false;
-    }
-
-    // Check if the day is already assigned
-    if (assignedDays[day]) {
-        return false;
-    }
-
-    // Check if the next cell is not the last and if it is already assigned as a shift
-    if (day < cells.length - 5 && cells[day + 5].innerHTML === "1") {
-        return false;
-    }
-
-    // Check if the previous cell is not the first and if it is already assigned as a shift
-    if (day > 0 && cells[day + 3].innerHTML === "1") {
-        return false;
-    }
-
-
-    return true;
+    calculateCollumnsTotals()
+    calculateDaysTotals()
 }
 
-// Buttons logic
+function calculateCollumnsTotals() {
+    var table = document.getElementsByTagName("table")[0];
+    var rows = table.getElementsByTagName("tr");
+    var column1Total = calculatemaxAssignmentsRowTotal();
+    var column2Total = 0;
+    var column3Total = 0;
+
+    for (var i = 1; i < rows.length - 1; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        column2Total += parseInt(cells[2].innerHTML) || 0;
+        column3Total += parseInt(cells[3].innerHTML) || 0;
+    }
+    console.log({column1Total});
+    rows[rows.length - 1].getElementsByTagName("td")[1].innerHTML = column1Total;
+    rows[rows.length - 1].getElementsByTagName("td")[2].innerHTML = column2Total;
+    rows[rows.length - 1].getElementsByTagName("td")[3].innerHTML = column3Total;
+}
+
+
+
+function calculateDaysTotals() {
+    var table = document.getElementsByTagName("table")[0];
+    var rows = table.getElementsByTagName("tr");
+    var daysTotals = [];
+
+    for (var j = 4; j < rows[0].cells.length; j++) {
+        var count = 0;
+
+        for (var i = 1; i < rows.length - 1; i++) {
+            var cells = rows[i].getElementsByTagName("td");
+
+            if (cells[j].innerHTML === "1") {
+                count++;
+            }
+        }
+
+        daysTotals.push(count);
+        rows[rows.length - 1].cells[j].innerHTML = count; // Set the total in the last row of each column
+    }
+
+}
+
+
 function exportToExcel() {
     const table = document.querySelector('table');
     const worksheet = XLSX.utils.table_to_sheet(table);
@@ -235,95 +249,6 @@ function exportToExcel() {
 }
 
 function autofillTable() {
-    var table = document.getElementsByTagName("table")[0];
-    var rows = table.getElementsByTagName("tr");
-
-    // Initialize an array to keep track of assigned days
-    var assignedDays = new Array(rows[0].cells.length - 4).fill(false);
-
-    // Initialize an array to keep track of the number of assignments per row
-    var assignmentsPerRow = new Array(rows.length - 2).fill(0);
-
-    // Initialize an array to keep track of the maximum number of assignments per row
-    var maxAssignmentsPerRow = [];
-    for (var i = 1; i < rows.length - 1; i++) {
-        maxAssignmentsPerRow.push(parseInt(rows[i].cells[1].getElementsByTagName("input")[0].value));
-    }
-
-    // Every employee must have at most one assignment on the marked days
-    // Avg martked days per person are
-    if (markedDays.length != 0) {
-        var markedDaysPerPerson = Math.round(markedDays.length / (rows.length - 2));
-    } else {
-        var markedDaysPerPerson = 0;
-    }
-
-    //check if the table has have values in the cells. if it has update the proper arrays
-    for (var i = 1; i < rows.length - 1; i++) {
-        var cells = rows[i].getElementsByTagName("td");
-        for (var j = 4; j < cells.length; j++) {
-            if (cells[j].innerHTML === "1") {
-                assignedDays[j - 4] = true;
-                assignmentsPerRow[i - 1]++;
-            }
-        }
-    }
-
-    // shuffle marked days and assign them to each person
-    var markedDaysCopy = markedDays.slice(); // Copy the array of marked days
-    shuffleArray(markedDaysCopy); // Shuffle the array of marked days
-
-    for (var i = 1; i < rows.length - 1; i++) // Iterate over each row except the first and last one
-    {
-        var cells = rows[i].getElementsByTagName("td"); // Get the cells of the row
-
-        for (var j = 4; j < cells.length; j++) // Iterate over each cell except the first three
-        {
-            if (markedDaysCopy.length > 0) {
-                var day = markedDaysCopy.pop(); // Get the day from the shuffled array
-
-                if (isValidAssignment(i, cells, day - 1, assignmentsPerRow, maxAssignmentsPerRow, assignedDays)) {
-
-                    // Adicional check to make sure that the marked days are distributed evenly
-                    if (assignmentsPerRow[i - 1] < markedDaysPerPerson) {
-
-                        markShift(cells[day + 3]); // Mark the cell as a shift
-                        assignedDays[day - 1] = true; // Mark the day as assigned
-                        assignmentsPerRow[i - 1]++; // Increment the number of assignments for the row
-                    } else {
-                        markedDaysCopy.push(day); // Add the day back to the array
-                    }  
-                } 
-            }   
-        }
-    }
-
-    // Create an array of days in random order
-    var days = []; // the day are stored from 0 to 30 in the array (depending on the month)
-    for (var j = 0; j < rows[0].cells.length-4; j++) {
-        days.push(j);
-        console.log(j);
-    }
-    // Shuffle the array of days
-    shuffleArray(days);
-
-    for (var i = 1; i < rows.length - 1; i++) // Iterate over each row except the first and last one
-    {
-        var cells = rows[i].getElementsByTagName("td"); // Get the cells of the row
-
-        for (var j = 4; j < cells.length; j++) // Iterate over each cell except the first three
-        {
-            var day = days[j - 4]; // Get the day from the shuffled array
-
-            if (isValidAssignment(i, cells, day, assignmentsPerRow, maxAssignmentsPerRow, assignedDays)) {
-                markShift(cells[day + 4]); // Mark the cell as a shift
-                assignedDays[day] = true; // Mark the day as assigned
-                assignmentsPerRow[i - 1]++; // Increment the number of assignments for the row
-            }
-        }
-
-    }
-    calculateRowTotals(); // Recalculate totals after autofilling
 }
 
 function shuffleArray(array) {
@@ -333,6 +258,35 @@ function shuffleArray(array) {
         array[i] = array[j];
         array[j] = temp;
     }
+}
+
+function isValidAssignment(i, cells, day, assignmentsPerRow, maxAssignmentsPerRow, assignedDays) {
+    // Check if the day is marked as unavailable "-"
+    if (cells[day + 4].innerHTML === "-") {
+        return false;
+    }
+    // Check if the row has reached the maximum number of assignments
+    if (assignmentsPerRow[i - 1] >= maxAssignmentsPerRow[i - 1]) {
+        return false;
+    }
+
+    // Check if the day is already assigned
+    if (assignedDays[day]) {
+        return false;
+    }
+
+    // Check if the next cell is not the last and if it is already assigned as a shift
+    if (day < cells.length - 5 && cells[day + 5].innerHTML === "1") {
+        return false;
+    }
+
+    // Check if the previous cell is not the first and if it is already assigned as a shift
+    if (day > 0 && cells[day + 3].innerHTML === "1") {
+        return false;
+    }
+
+
+    return true;
 }
 
 function clearTable() {
@@ -352,9 +306,20 @@ function clearTable() {
     calculateRowTotals();
 }
 
-// Paragraph logic
+
 function toggleParagraph(id) {
-    let paragraph = document.getElementById(id);
-    paragraph.classList.toggle("hidden");
-    paragraph.classList.toggle("visible");
+    var paragraph = document.getElementById(id);
+    if (paragraph.style.display === "none") {
+        paragraph.style.display = "block";
+        paragraph.style.display = "block";
+        paragraph.style.opacity = "1";
+        paragraph.style.maxHeight = "500px";
+    } else {
+        paragraph.style.display = "none";
+        paragraph.style.display = "none";
+        paragraph.style.opacity = "0";
+        paragraph.style.maxHeight = "0";
+        paragraph.style.overflow = "hidden";
+        paragraph.style.transition = "opacity 0.5s ease, max-height 0.5s ease";
+    }
 }

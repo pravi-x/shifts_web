@@ -48,16 +48,7 @@ p {
     max-width: 70%;
 }
 
-.hidden {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: opacity 0.5s ease, max-height 0.5s ease;
-}
-.visible {
-    opacity: 1;
-    max-height: 500px; /* Αρκετά μεγάλο ώστε να ταιριάζει στο περιεχόμενο */
-}
+
 
 label {
     display: block;
