@@ -164,7 +164,17 @@ function calculateRowTotals() {
         }
 
         cells[2].innerHTML = count || 0;
+        if (count !== 0 ){
+            UnMarkDayTotal(cells[2]);
+        } else {
+            markDayTotal(cells[2]);
+        }
         cells[3].innerHTML = holidaysCount || 0;
+        if (holidaysCount !== 0 ){
+            UnMarkDayTotal(cells[3]);
+        } else {
+            markDayTotal(cells[3]);
+        }
     }
     holidaysCount = 0;
     calculateCollumnsTotals()
@@ -181,6 +191,7 @@ function UnMarkDayTotal(cell){
     cell.style.backgroundColor = "#f2f2f2"; //gray
     cell.style.color = "#0A0510"; //black
 }
+
 // Mark the total cell if is has 0 or 2 enties
 
 function calculateCollumnsTotals() {
