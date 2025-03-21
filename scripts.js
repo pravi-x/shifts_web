@@ -171,6 +171,18 @@ function calculateRowTotals() {
     calculateDaysTotals()
 }
 
+// mark the columns DaysTotals
+function markDayTotal(cell) {
+    cell.style.backgroundColor = "#0A0510"; // black
+    cell.style.color = "white";
+}
+
+function UnMarkDayTotal(cell){
+    cell.style.backgroundColor = "#f2f2f2"; //gray
+    cell.style.color = "#0A0510"; //black
+}
+// Mark the total cell if is has 0 or 2 enties
+
 function calculateCollumnsTotals() {
     var table = document.getElementsByTagName("table")[0];
     var rows = table.getElementsByTagName("tr");
@@ -208,7 +220,14 @@ function calculateDaysTotals() {
         }
 
         daysTotals.push(count);
-        rows[rows.length - 1].cells[j].innerHTML = count; // Set the total in the last row of each column
+        var dayT = rows[rows.length - 1].cells[j]
+        dayT.innerHTML = count; // Set the total in the last row of each column
+        if (count == 1 ){
+            markDayTotal(dayT);
+        } else {
+            UnMarkDayTotal(dayT);
+        }
+
     }
 
 }
@@ -407,6 +426,7 @@ function clearTable() {
     }
 
     calculateRowTotals();
+    calculateDaysTotals();
 }
 
 
