@@ -1,3 +1,29 @@
+var translations = {};
+var currentLanguage = "gr";
+
+fetch('translations.json')
+    .then(response => response.json())
+    .then(data => {
+        translations = data;
+        translatePage();
+    })
+    .catch(error => {
+        console.error('Error fetching translations:', error);
+    });
+
+document.getElementById("changeLanguageButton").addEventListener("click", function() {
+    currentLanguage = currentLanguage === "gr" ? "eng" : "gr";
+    translatePage();
+});
+
+function translatePage() {
+    var elementsToTranslate = document.querySelectorAll("[data-translate-key]");
+
+    elementsToTranslate.forEach(element => {
+        var translationKey = element.getAttribute("data-translate-key");
+        element.textContent = translations[currentLanguage][translationKey];
+    });
+}
 
 function generateTable() {
     // clear the table container
@@ -34,7 +60,8 @@ function generateTable() {
                 } else {
                     if (j === 0) {
                         table += "<td><input type=\"text\"></td>";
-                        table += "<td><input id=\"maxAssignmentsRow" + i + "\" type=\"number\" value=\"3\" min=\"0\"></td>";
+                    } else if (j === 1) {
+                        table += "<td><input type=\"number\" value=\"3\" min=\"0\"></td>";
                     } else if (j === 2) {
                         table += "<td id=\"calculateRowTotals()\"></td>";
                     } else if (j === 3) {
@@ -65,20 +92,6 @@ function generateTable() {
 
         document.getElementById("tableContainer").innerHTML = table;
     }
-}
-
-function calculatemaxAssignmentsRowTotal() {
-    var table = document.getElementsByTagName("table")[0];
-    var rows = table.getElementsByTagName("tr");
-    var total = 0;
-
-    for (var i = 1; i < rows.length - 1; i++) {
-        var input = rows[i].querySelector("td:nth-child(2) input");
-        total += parseInt(input.value) || 0;
-    }
-
-    console.log("Total max assignments: " + total);
-    return total;
 }
 
 
@@ -161,22 +174,22 @@ function calculateRowTotals() {
 function calculateCollumnsTotals() {
     var table = document.getElementsByTagName("table")[0];
     var rows = table.getElementsByTagName("tr");
-    var column1Total = calculatemaxAssignmentsRowTotal();
+    var column1Total = 0;
     var column2Total = 0;
     var column3Total = 0;
 
     for (var i = 1; i < rows.length - 1; i++) {
         var cells = rows[i].getElementsByTagName("td");
+        column1Total += parseInt(cells[1].querySelector("input").value) || 0; // Sum up maximum values
         column2Total += parseInt(cells[2].innerHTML) || 0;
         column3Total += parseInt(cells[3].innerHTML) || 0;
     }
-    console.log({column1Total});
-    rows[rows.length - 1].getElementsByTagName("td")[1].innerHTML = column1Total;
-    rows[rows.length - 1].getElementsByTagName("td")[2].innerHTML = column2Total;
-    rows[rows.length - 1].getElementsByTagName("td")[3].innerHTML = column3Total;
+
+    var lastRow = rows[rows.length - 1].getElementsByTagName("td");
+    lastRow[1].innerHTML = column1Total; // Display column1Total (maximum values)
+    lastRow[2].innerHTML = column2Total;
+    lastRow[3].innerHTML = column3Total;
 }
-
-
 
 function calculateDaysTotals() {
     var table = document.getElementsByTagName("table")[0];
@@ -248,7 +261,97 @@ function exportToExcel() {
     XLSX.writeFile(workbook, 'schedule.xlsx');
 }
 
+
 function autofillTable() {
+    var table = document.getElementsByTagName("table")[0];
+    var rows = table.getElementsByTagName("tr");
+
+    // Initialize an array to keep track of assigned days
+    var assignedDays = new Array(rows[0].cells.length - 4).fill(false);
+
+    // Initialize an array to keep track of the number of assignments per row
+    var assignmentsPerRow = new Array(rows.length - 2).fill(0);
+
+    // Initialize an array to keep track of the maximum number of assignments per row
+    var maxAssignmentsPerRow = [];
+    for (var i = 1; i < rows.length - 1; i++) {
+        maxAssignmentsPerRow.push(parseInt(rows[i].cells[1].getElementsByTagName("input")[0].value));
+    }
+
+    // Every employee must have at most one assignment on the marked days
+    // Avg martked days per person are
+    if (markedDays.length != 0) {
+        var markedDaysPerPerson = Math.round(markedDays.length / (rows.length - 2));
+    } else {
+        var markedDaysPerPerson = 0;
+    }
+
+    //check if the table has have values in the cells. if it has update the proper arrays
+    for (var i = 1; i < rows.length - 1; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        for (var j = 4; j < cells.length; j++) {
+            if (cells[j].innerHTML === "1") {
+                assignedDays[j - 4] = true;
+                assignmentsPerRow[i - 1]++;
+            }
+        }
+    }
+
+    // shuffle marked days and assign them to each person
+    var markedDaysCopy = markedDays.slice(); // Copy the array of marked days
+    shuffleArray(markedDaysCopy); // Shuffle the array of marked days
+
+    for (var i = 1; i < rows.length - 1; i++) // Iterate over each row except the first and last one
+    {
+        var cells = rows[i].getElementsByTagName("td"); // Get the cells of the row
+
+        for (var j = 4; j < cells.length; j++) // Iterate over each cell except the first three
+        {
+            if (markedDaysCopy.length > 0) {
+                var day = markedDaysCopy.pop(); // Get the day from the shuffled array
+
+                if (isValidAssignment(i, cells, day - 1, assignmentsPerRow, maxAssignmentsPerRow, assignedDays)) {
+
+                    // Adicional check to make sure that the marked days are distributed evenly
+                    if (assignmentsPerRow[i - 1] < markedDaysPerPerson) {
+
+                        markShift(cells[day + 3]); // Mark the cell as a shift
+                        assignedDays[day - 1] = true; // Mark the day as assigned
+                        assignmentsPerRow[i - 1]++; // Increment the number of assignments for the row
+                    } else {
+                        markedDaysCopy.push(day); // Add the day back to the array
+                    }  
+                } 
+            }   
+        }
+    }
+
+    // Create an array of days in random order
+    var days = []; // the day are stored from 0 to 30 in the array (depending on the month)
+    for (var j = 0; j < rows[0].cells.length-4; j++) {
+        days.push(j);
+        console.log(j);
+    }
+    // Shuffle the array of days
+    shuffleArray(days);
+
+    for (var i = 1; i < rows.length - 1; i++) // Iterate over each row except the first and last one
+    {
+        var cells = rows[i].getElementsByTagName("td"); // Get the cells of the row
+
+        for (var j = 4; j < cells.length; j++) // Iterate over each cell except the first three
+        {
+            var day = days[j - 4]; // Get the day from the shuffled array
+
+            if (isValidAssignment(i, cells, day, assignmentsPerRow, maxAssignmentsPerRow, assignedDays)) {
+                markShift(cells[day + 4]); // Mark the cell as a shift
+                assignedDays[day] = true; // Mark the day as assigned
+                assignmentsPerRow[i - 1]++; // Increment the number of assignments for the row
+            }
+        }
+
+    }
+    calculateRowTotals(); // Recalculate totals after autofilling
 }
 
 function shuffleArray(array) {
@@ -311,15 +414,7 @@ function toggleParagraph(id) {
     var paragraph = document.getElementById(id);
     if (paragraph.style.display === "none") {
         paragraph.style.display = "block";
-        paragraph.style.display = "block";
-        paragraph.style.opacity = "1";
-        paragraph.style.maxHeight = "500px";
     } else {
         paragraph.style.display = "none";
-        paragraph.style.display = "none";
-        paragraph.style.opacity = "0";
-        paragraph.style.maxHeight = "0";
-        paragraph.style.overflow = "hidden";
-        paragraph.style.transition = "opacity 0.5s ease, max-height 0.5s ease";
     }
 }
