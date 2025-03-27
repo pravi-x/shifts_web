@@ -25,6 +25,81 @@ function translatePage() {
     });
 }
 
+function generateTablePopUp() {
+    // Create the popup container
+    const popupContainer = document.createElement('div');
+    popupContainer.id = 'confirmationPopup';
+    popupContainer.style.position = 'fixed';
+    popupContainer.style.top = '0';
+    popupContainer.style.left = '0';
+    popupContainer.style.width = '100%';
+    popupContainer.style.height = '100%';
+    popupContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    popupContainer.style.display = 'flex';
+    popupContainer.style.justifyContent = 'center';
+    popupContainer.style.alignItems = 'center';
+    popupContainer.style.zIndex = '1000';
+
+    // Create the popup content
+    const popupContent = document.createElement('div');
+    popupContent.style.backgroundColor = 'white';
+    popupContent.style.padding = '20px';
+    popupContent.style.borderRadius = '10px';
+    popupContent.style.textAlign = 'center';
+    popupContent.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+
+    // Popup message
+    const message = document.createElement('p');
+    message.textContent = 'Ο υπάρχων πίνακας θα διαγραφεί. Είστε σίγουροι ότι θέλετε να δημιουργήσετε νέο πίνακα;';
+    message.style.marginBottom = '20px';
+
+    // Buttons container
+    const buttonsContainer = document.createElement('div');
+    buttonsContainer.style.display = 'flex';
+    buttonsContainer.style.justifyContent = 'center';
+    buttonsContainer.style.gap = '10px';
+
+    // Continue button
+    const continueButton = document.createElement('button');
+    continueButton.textContent = 'Συνέχεια';
+    continueButton.style.backgroundColor = '#5C1E4C';
+    continueButton.style.color = 'white';
+    continueButton.style.border = 'none';
+    continueButton.style.padding = '10px 20px';
+    continueButton.style.borderRadius = '5px';
+    continueButton.style.cursor = 'pointer';
+    continueButton.addEventListener('click', () => {
+        // Remove the popup
+        document.body.removeChild(popupContainer);
+        // Call the generateTable function
+        generateTable();
+    });
+
+    // Cancel button
+    const cancelButton = document.createElement('button');
+    cancelButton.textContent = 'Ακύρωση';
+    cancelButton.style.backgroundColor = '#A63A3A';
+    cancelButton.style.color = 'white';
+    cancelButton.style.border = 'none';
+    cancelButton.style.padding = '10px 20px';
+    cancelButton.style.borderRadius = '5px';
+    cancelButton.style.cursor = 'pointer';
+    cancelButton.addEventListener('click', () => {
+        // Simply remove the popup
+        document.body.removeChild(popupContainer);
+    });
+
+    // Assemble the popup
+    buttonsContainer.appendChild(continueButton);
+    buttonsContainer.appendChild(cancelButton);
+    popupContent.appendChild(message);
+    popupContent.appendChild(buttonsContainer);
+    popupContainer.appendChild(popupContent);
+
+    // Add the popup to the body
+    document.body.appendChild(popupContainer);
+}
+
 function generateTable() {
     // clear the table container
     document.getElementById("tableContainer").innerHTML = "";
