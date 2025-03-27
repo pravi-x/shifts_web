@@ -49,7 +49,7 @@ function generateTable() {
                     if (j === 0) {
                         table += '<td data-translate-key="name">Όνομα</td>';
                     } else if (j === 1) {
-                        table += '<td data-translate-key="maximum">Μέγιστο</td>';
+                        table += '<td data-translate-key="maximum">Μέγιστο Επιτρεπόμενο</td>';
                     } else if (j === 2) {
                         table += '<td data-translate-key="total">Σύνολο</td>';
                     } else if (j === 3) {
