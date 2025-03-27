@@ -1,7 +1,14 @@
-body {
-    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+html, body {
+    height: 100%;
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
 ::selection {
@@ -45,7 +52,7 @@ p {
     background-color:#f8e7b7; /* Add the same background color as data-container */
     padding: 10px;
     border-radius: 10px;
-    max-width: 70%;
+    max-width: 85%;
 }
 
 
@@ -220,16 +227,17 @@ a:hover {
 /* FOOTER */
 .footer {
     position: static;
+    margin-top: auto;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    width: 100%;
-    margin-top: auto;
     font-size: 20px;
     background: linear-gradient(135deg, #A63A3A, #A63A3A);
     background-color: #A63A3A;
     color: aliceblue;
+    padding: 10px 0; /* Added some padding for better spacing */
 }
 
 .footer p {

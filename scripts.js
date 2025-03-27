@@ -1,31 +1,13 @@
-var translations = {};
-var currentLanguage = "gr";
-
-fetch('translations.json')
-    .then(response => response.json())
-    .then(data => {
-        translations = data;
-        translatePage();
-    })
-    .catch(error => {
-        console.error('Error fetching translations:', error);
-    });
-
-document.getElementById("changeLanguageButton").addEventListener("click", function() {
-    currentLanguage = currentLanguage === "gr" ? "eng" : "gr";
-    translatePage();
-});
-
-function translatePage() {
-    var elementsToTranslate = document.querySelectorAll("[data-translate-key]");
-
-    elementsToTranslate.forEach(element => {
-        var translationKey = element.getAttribute("data-translate-key");
-        element.textContent = translations[currentLanguage][translationKey];
-    });
-}
+// Flag to track first run
+let isFirstRun = true;
 
 function generateTablePopUp() {
+    // If it's the first run, directly generate the table
+    if (isFirstRun) {
+        isFirstRun = false;
+        generateTable();
+        return;
+    }
     // Create the popup container
     const popupContainer = document.createElement('div');
     popupContainer.id = 'confirmationPopup';
@@ -51,6 +33,7 @@ function generateTablePopUp() {
     // Popup message
     const message = document.createElement('p');
     message.textContent = 'Ο υπάρχων πίνακας θα διαγραφεί. Είστε σίγουροι ότι θέλετε να δημιουργήσετε νέο πίνακα;';
+    message.style.width = '100%';
     message.style.marginBottom = '20px';
 
     // Buttons container
@@ -68,6 +51,13 @@ function generateTablePopUp() {
     continueButton.style.padding = '10px 20px';
     continueButton.style.borderRadius = '5px';
     continueButton.style.cursor = 'pointer';
+    continueButton.style.transition = 'background-color 0.3s ease';
+    continueButton.addEventListener('mouseover', () => {
+        continueButton.style.backgroundColor = '#7A2A65';
+    });
+    continueButton.addEventListener('mouseout', () => {
+        continueButton.style.backgroundColor = '#5C1E4C';
+    });
     continueButton.addEventListener('click', () => {
         // Remove the popup
         document.body.removeChild(popupContainer);
@@ -84,6 +74,13 @@ function generateTablePopUp() {
     cancelButton.style.padding = '10px 20px';
     cancelButton.style.borderRadius = '5px';
     cancelButton.style.cursor = 'pointer';
+    cancelButton.style.transition = 'background-color 0.3s ease';
+    cancelButton.addEventListener('mouseover', () => {
+        cancelButton.style.backgroundColor = '#C04D4D';
+    });
+    cancelButton.addEventListener('mouseout', () => {
+        cancelButton.style.backgroundColor = '#A63A3A';
+    });
     cancelButton.addEventListener('click', () => {
         // Simply remove the popup
         document.body.removeChild(popupContainer);
